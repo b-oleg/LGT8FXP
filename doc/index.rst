@@ -8,7 +8,7 @@ Welcome to Example's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Содержание:
 
-   some-feature.md
-   another-feature.md
+   system.md
+   package.md
