@@ -10,5 +10,6 @@ Welcome to Example's documentation!
    :maxdepth: 2
    :caption: Содержание:
 
+   feature.md
    system.md
    package.md
