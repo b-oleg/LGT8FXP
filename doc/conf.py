@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Example'
+project = 'LGT8F328P'
 copyright = 'workshop participant'
 author = 'workshop participant'
 release = '0.1'
