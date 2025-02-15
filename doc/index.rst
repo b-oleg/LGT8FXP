@@ -11,4 +11,5 @@ Welcome to Example's documentation!
    :caption: Содержание:
 
    overview.md
+   clk.md
    

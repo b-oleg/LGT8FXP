@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'LGT8F328P'
-#copyright = ''
-#author = ''
+copyright = 'b-oleg'
+author = 'b-oleg'
 release = '0.1'
 
 
