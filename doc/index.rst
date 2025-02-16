@@ -13,4 +13,5 @@ Welcome to Example's documentation!
    overview.md
    core.md
    clk.md
+   udsc.md
    
