@@ -1,0 +1,852 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ускоритель вычислений (uDSC) &mdash; LGT8FXP 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Система тактирования" href="clk.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            LGT8FXP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Описание</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Ядро</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clk.html">Система тактирования</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Ускоритель вычислений (uDSC)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">Обзор</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ld-st">16-битный режим работы LD/ST</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ldd-rn-z-q">Инструкция: LDD Rn, Z+q</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#std-rn-z-v-q">Инструкция: STD Rn, Z/V+q</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Отображение адресов переменных на 16-битный режим адресации</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">Определение инструкций для операций uDSC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">Регистры uDSC</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dscr">Регистр управления DSCR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dsir">Регистр инструкции DSIR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dsdx">Регистр операнда DSDX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dsdy">Регистр операнда DSDY</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dsal">Регистр результата операции DSAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dsah">Регистр результата операции DSAH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dssd">Регистр переполнения DSSD</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">Примеры применения uDSC</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LGT8FXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Ускоритель вычислений (uDSC)</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/udsc.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="udsc">
+<h1>Ускоритель вычислений (uDSC)<a class="headerlink" href="#udsc" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>16-битный режим хранения (LD/ST)</p></li>
+<li><p>32-битный аккумулятор (DX)</p></li>
+<li><p>Однотактный 16-битный умножитель (MUL)</p></li>
+<li><p>32-битное арифметико-логическое устройство (ALU)</p></li>
+<li><p>16-битная насыщенная арифметика (SD)</p></li>
+<li><p>8-тактный 32/16-битный делитель</p></li>
+<li><p>Однотактные операции умножения-сложения/умножения-вычитания (MAC/MSC)</p></li>
+</ul>
+<section id="id1">
+<h2>Обзор<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>Цифровой ускоритель вычислений (uDSC) является вычислительным сопроцессорным модулем ядра LGT8XP, который работает в сочетании с 16-битным режимом LD/ST ядра LGT8XP, реализуя 16-битный блок цифровой обработки сигналов. Это позволяет удовлетворять требованиям большинства задач обработки цифровых сигналов в управляющих системах.</p>
+<p>Функции uDSC и его внутренняя структура:</p>
+<ul class="simple">
+<li><p>16-битные регистры операндов DX/DY</p></li>
+<li><p>32-битный аккумуляторный регистр DA</p></li>
+<li><p>Однотактный 17-битный умножитель (способен выполнять 16-битные умножения как для знаковых, так и для беззнаковых чисел)</p></li>
+<li><p>32-битное ALU (способно выполнять 16/32-битные операции сложения, вычитания и сдвига)</p></li>
+<li><p>16-битная насыщенная арифметика (используется для сохранения результатов вычислений в RAM)</p></li>
+<li><p>32/16-битный делитель, завершающий операции за 8 тактов.</p></li>
+</ul>
+<p><img alt="Ускоритель вычислений" src="_images/udsc.png" /></p>
+</section>
+<section id="ld-st">
+<h2>16-битный режим работы LD/ST<a class="headerlink" href="#ld-st" title="Link to this heading"></a></h2>
+<p>Для повышения эффективности обработки больших объемов данных в uDSC, ядро LGT8FXP реализует специальный 16-битный канал LD/ST, который позволяет использовать инструкции LDD/STD для эффективного обмена 16-битными данными между uDSC, SRAM и регистрами общего назначения.</p>
+<p>Чтобы не нарушать работу стандартной системы инструкций LD/ST, ядро LGT8FXP переназначает пространство SRAM на адреса 0x2100–0x28FF. Когда инструкции LD/ST используются для доступа к SRAM в этом диапазоне адресов, ядро автоматически активирует 16-битный режим LD/ST, открывая прямой канал доступа между SRAM и uDSC.</p>
+<p>На следующем рисунке показано распределение адресного пространства данных в ядре LGT8FXP:</p>
+<p><img alt="Распределение адресного пространства" src="_images/udsc-mem.png" /></p>
+<p>Как показано на рисунке выше, ядро LGT8FXP может использовать инструкции LD/ST для прямого 16-битного доступа к данным между регистрами DX/DY/DA uDSC и SRAM. Внутренние регистры uDSC также отображаются в пространство I/O, и доступ к ним может осуществляться в двух режимах: 8-битном и 16-битном.</p>
+<p>Помимо регистров DX/DY/DA, используемых для вычислений, uDSC также включает два дополнительных 8-битных регистра:</p>
+<ul class="simple">
+<li><p>Регистр управления и состояния (CSR)</p></li>
+<li><p>Регистр команд (IR)</p></li>
+</ul>
+<p>Доступ к CSR и IR возможен только через пространство I/O побайтово, тогда как доступ к DX/DY/AL/AH осуществляется в 16-битном режиме. Для доступа к этим регистрам можно использовать инструкции IN/OUT, LD/ST, LDD/STD, LDS/STD и другие.</p>
+<p>Все управляющие, статусные и регистры данных uDSC отображаются в пространство I/O, что позволяет выполнять 8/16-битный доступ за один такт с помощью инструкций IN/OUT.</p>
+<p>CSR используется для управления режимами работы uDSC и хранения флагов состояния текущих операций. IR управляет конкретными операциями, выполняемыми uDSC. Большинство операций</p>
+<p>uDSC выполняются за один такт, за исключением деления, которое требует 7 тактов ожидания. Завершение операции деления можно проверить с помощью флагов в регистре CSR.</p>
+<p>Стандартные инструкции LD/ST используют внутренние регистры общего назначения LGT8FXP в качестве данных для LD/ST, а регистры X/Y/Z — в качестве целевых адресов. Когда целевой адрес попадает в 16-битное отображение SRAM, значение операндов инструкций LD/ST изменяется: X/Y/Z по-прежнему используются как целевые адреса, а значение регистров общего назначения интерпретируется в зависимости от режима отображения uDSC. Режим отображения uDSC применяется только для доступа к адресам 0x2100–0x28FF и устанавливается с помощью 6-го бита (MM) регистра CSR.</p>
+<p>В 16-битном режиме LD/ST инструкция “LDD Rn, Z+q” означает загрузку 16-битных данных по адресу [Z] в регистр данных uDSC, после чего значение Z увеличивается на смещение “q”. Значение Rn в этой инструкции зависит от режима отображения CSR[MM], как показано ниже:</p>
+<section id="ldd-rn-z-q">
+<h3>Инструкция: LDD Rn, Z+q<a class="headerlink" href="#ldd-rn-z-q" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>CSR[MM]</p></th>
+<th class="head"><p>[Z+q]</p></th>
+<th class="head"><p>Опкод</p></th>
+<th class="head"><p>Операции</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0x2100-0x28FF</p></td>
+<td><p>LDD R0, Z+q<br>LDD R1, Z+q<br>LDD R2, Z+q<br>LDD R3, Z+q</p></td>
+<td><p>DX = [Z]; Z = Z + q; R0 остается неизменным<br>DY = [Z]; Z = Z + q; R1 остается неизменным<br>AL = [Z]; Z = Z + q; R2 остается неизменным<br>AH = [Z]; Z = Z + q; R3 остается неизменным</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0x2100-0x28FF</p></td>
+<td><p>LDD Rn, Z+q</p></td>
+<td><p>{Rn} адрес для DX/DY/AL/AH в области I/O<br>[DX/DY/AL/AV] = [Z]; Z = Z + q<br>Rn остается неизменным</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="std-rn-z-v-q">
+<h3>Инструкция: STD Rn, Z/V+q<a class="headerlink" href="#std-rn-z-v-q" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>CSR[MM]</p></th>
+<th class="head"><p>[Z+q]</p></th>
+<th class="head"><p>Опкод</p></th>
+<th class="head"><p>Операции</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0x2100-0x28FF</p></td>
+<td><p>STD Z+q R0<br>STD Z+q, R1<br>STD Z+q, R2<br>STD Z+q, R3<br>STD Z+q, R4</p></td>
+<td><p>[Z] = DX; Z = Z + q; R0 остается неизменным<br>[Z] = DY; Z = Z + q; R1 остается неизменным<br>[Z] = AL; Z = Z + q; R2 остается неизменным<br>[Z] = AH; Z = Z + q; R3 остается неизменным<br>[Z] = SD; Z = Z + q; R4 остается неизменным</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0x2100-0x28FF</p></td>
+<td><p>STD Z+q, Rn</p></td>
+<td><p>{Rn} адрес для DX/DY/AL/AH/SD в области I/O<br>[Z] = [DX/DY/AL/AH/SD] адресован к {Rn}<br>Rn остается неизменным</p></td>
+</tr>
+</tbody>
+</table>
+<p>Инструкции LD/ST и LDS/STS в наборе инструкций LGT8FXP также могут обращаться к области 0x2100–0x28FF, но адресация Y/Z+q в инструкциях LDD/STD более эффективна. Адресация LDD/STD основана на базовом адресе, где Y/Z может быть установлен как базовый адрес данных в RAM. Используя адресацию Y/Z+q в инструкциях LDD/STD, можно выполнить инструкцию и получить доступ к данным за один такт, автоматически перемещая указатель адреса на следующий целевой адрес.</p>
+<p>В стандартном режиме адресации Y/Z+q в инструкциях LDD/STD ядра LGT8FXP, при выполнении инструкции используется адрес [Y/Z+q] для 8-битных данных, и значение Y/Z не увеличивается после выполнения. Однако при использовании LDD/STD для адресации в диапазоне 0x2100–0x28FF, поведение инструкции изменяется: используется адрес [Y/Z] для 16-битных данных, и после выполнения значение Y/Z увеличивается на смещение “q”. Это повышает эффективность последовательной адресации, особенно при q=2, что позволяет адресовать последовательные 16-битные данные.</p>
+<p><img alt="Адресация" src="_images/udsc-ldst.png" /></p>
+</section>
+<section id="id2">
+<h3>Отображение адресов переменных на 16-битный режим адресации<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>LGT8FXP является 8-битным процессором, и доступ к данным осуществляется побайтово. Микроконтроллер LGT8F328P имеет встроенное 2 КБ пространство данных, которое отображается на адреса 0x0100–0x08FF. Компиляторы C/C++ автоматически распределяют переменные в этом диапазоне адресов. Если в C/C++ определен 16-битный массив, который необходимо обработать с помощью uDSC, сначала нужно отобразить адрес этой переменной в область 16-битного доступа LD/ST (0x2100–0x28FF). Это делается простым добавлением смещения 0x2000 к адресу переменной.</p>
+</section>
+</section>
+<section id="id3">
+<h2>Определение инструкций для операций uDSC<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>Программное обеспечение задает операции, которые должны быть выполнены, через регистр IR uDSC. Все операции uDSC выполняются между регистрами DX/DY/DA. Пользователь может использовать 16-битный канал LD/ST для быстрого обмена данными между DX/DY/DA и SRAM.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>IR7</p></th>
+<th class="head"><p>IR6</p></th>
+<th class="head"><p>IR5</p></th>
+<th class="head"><p>IR4</p></th>
+<th class="head"><p>IR3</p></th>
+<th class="head"><p>IR2</p></th>
+<th class="head"><p>IR1</p></th>
+<th class="head"><p>IR0</p></th>
+<th class="head"><p>Функция</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p><strong>ADD/SUB</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>S<sup>1</sup></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>DA = DX + DY</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>S<sup>1</sup></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>DA = DX – DY</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>DA = DY</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>S<sup>1</sup></p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>DA = -DY</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>S<sup>1</sup></p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>DA = DA + DY</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>S<sup>1</sup></p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>DA = DA – DY</p></td>
+</tr>
+<tr class="row-odd"><td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p><strong>MAC/MSC</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>S1<sup>2</sup></p></td>
+<td><p>S0<sup>2</sup></p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>DA = DX * DY</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>S1<sup>2</sup></p></td>
+<td><p>S0<sup>2</sup></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>DA = -DX * DY</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>S1<sup>2</sup></p></td>
+<td><p>S0<sup>2</sup></p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>DA = (DX * DY) &gt;&gt; 1</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>S1<sup>2</sup></p></td>
+<td><p>S0<sup>2</sup></p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>DA = (-DX * DY) &gt;&gt; 1</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>S1<sup>2</sup></p></td>
+<td><p>S0<sup>2</sup></p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>S</p></td>
+<td><p>DA = DA + DX * DY</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>S1<sup>2</sup></p></td>
+<td><p>S0<sup>2</sup></p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>S</p></td>
+<td><p>DA = (DA + DX * DY) &gt;&gt; 1</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>S1<sup>2</sup></p></td>
+<td><p>S0<sup>2</sup></p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>S</p></td>
+<td><p>DA = DA – DX * DY</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>S1<sup>2</sup></p></td>
+<td><p>S0<sup>2</sup></p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>S</p></td>
+<td><p>DA = (DA – DX * DY) &gt;&gt; 1</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p><strong>MISC</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>DA = 0</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>S</p></td>
+<td><p>DA = NEG(DA)</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>S</p></td>
+<td><p>DA = DX^2</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>S</p></td>
+<td><p>DA = DY^2</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>S</p></td>
+<td><p>DA = ABS(DA)</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>DA = DA/DY</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>DA = DA/DY, DY = DA%DY</p></td>
+</tr>
+<tr class="row-even"><td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p><strong>SHIFT</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>N3</p></td>
+<td><p>N2</p></td>
+<td><p>N1</p></td>
+<td><p>N0</p></td>
+<td><p>DA = DA &lt;&lt; N</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>S</p></td>
+<td><p>1</p></td>
+<td><p>N3</p></td>
+<td><p>N2</p></td>
+<td><p>N1</p></td>
+<td><p>N0</p></td>
+<td><p>DA = DA &gt;&gt; N</p></td>
+</tr>
+</tbody>
+</table>
+<p>Примечание:</p>
+<ol class="arabic simple">
+<li><p>S указывает, является ли операция знаковой или беззнаковой.</p></li>
+<li><p>S1 указывает, является ли DX числом со знаком, а S2 указывает, является ли DY числом со знаком.</p></li>
+<li><p>N[3:0] — количество четырехбитных сдвигов, которое может достигать максимум 15-битных операций сдвига.</p></li>
+</ol>
+</section>
+<section id="id4">
+<h2>Регистры uDSC<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Имя</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DCSR</p></td>
+<td><p>0x20 (0x00)</p></td>
+<td><p>Регистр состояния управления uDSC</p></td>
+</tr>
+<tr class="row-odd"><td><p>DSIR</p></td>
+<td><p>0x21 (0x01)</p></td>
+<td><p>Регистр инструкции</p></td>
+</tr>
+<tr class="row-even"><td><p>DSSD</p></td>
+<td><p>0x22 (0x02)</p></td>
+<td><p>16-разрядное переполнение 32-разрядного аккумулятора DSA</p></td>
+</tr>
+<tr class="row-odd"><td><p>DSDX</p></td>
+<td><p>0x10 (0x30)</p></td>
+<td><p>Операнд DSDX, 16-битный доступ для чтения и записи</p></td>
+</tr>
+<tr class="row-even"><td><p>DSDY</p></td>
+<td><p>0x11 (0x31)</p></td>
+<td><p>Операнд DSDY, 16-битный доступ для чтения и записи</p></td>
+</tr>
+<tr class="row-odd"><td><p>DSAL</p></td>
+<td><p>0x38 (0x58)</p></td>
+<td><p>32-битный аккумулятор DSA[15:0], 16-битный доступ для чтения и записи</p></td>
+</tr>
+<tr class="row-even"><td><p>DSAH</p></td>
+<td><p>0x39 (0x59)</p></td>
+<td><p>32-битный аккумулятор DSA[31:16], 16-битный доступ для чтения и записи</p></td>
+</tr>
+</tbody>
+</table>
+<section id="dscr">
+<h3>Регистр управления DSCR<a class="headerlink" href="#dscr" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Имя</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Значение по умолчанию</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DCSR</p></td>
+<td><p>0x20(0x00)</p></td>
+<td><p>0010xxxx</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Доступ</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>R/W</p></td>
+<td><p>DSUEN</p></td>
+<td><p>uDSC модуль включить управление; 1 = включить, 0 = отключить</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>R/W</p></td>
+<td><p>ММ</p></td>
+<td><p>Режим отображения регистров uDSC, подробное описание см.<br>во введении к 16-битному рабочему режиму.<br>0 = Режим быстрого доступа, 1 = Режим сопоставления ввода-вывода</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>R/W</p></td>
+<td><p>D1</p></td>
+<td><p>Флаг завершения операции деления, 1 = завершена</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>R/W</p></td>
+<td><p>D0</p></td>
+<td><p>Операция деления, флаг деления на 0</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>Не реализовано</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>R/W</p></td>
+<td><p>N</p></td>
+<td><p>Результат операции отрицательное число</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>R/W</p></td>
+<td><p>Z</p></td>
+<td><p>Результат операции — ноль</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>R/W</p></td>
+<td><p>C</p></td>
+<td><p>Флаг переноса/заимствования сумматора</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dsir">
+<h3>Регистр инструкции DSIR<a class="headerlink" href="#dsir" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Имя</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Значение по умолчанию</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DSIR</p></td>
+<td><p>0x21 (0x01)</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Доступ</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7:0</p></td>
+<td><p>R/W</p></td>
+<td><p>IR</p></td>
+<td><p>инструкция, обратитесь к описанию раздела.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dsdx">
+<h3>Регистр операнда DSDX<a class="headerlink" href="#dsdx" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Имя</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Значение по умолчанию</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DSDX</p></td>
+<td><p>0x30 (0x10)</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Доступ</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>15:0</p></td>
+<td><p>R/W</p></td>
+<td><p>DSDX</p></td>
+<td><p>16-битный операнд</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dsdy">
+<h3>Регистр операнда DSDY<a class="headerlink" href="#dsdy" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Имя</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Значение по умолчанию</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DSDY</p></td>
+<td><p>0x31 (0x11)</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Доступ</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>15:0</p></td>
+<td><p>R/W</p></td>
+<td><p>DSDY</p></td>
+<td><p>16-битный операнд</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dsal">
+<h3>Регистр результата операции DSAL<a class="headerlink" href="#dsal" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Имя</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Значение по умолчанию</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DSAL</p></td>
+<td><p>0x58 (0x38)</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Доступ</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>15:0</p></td>
+<td><p>R/W</p></td>
+<td><p>DSAL</p></td>
+<td><p>младшие 16 бит 32-битного аккумулятора DA</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dsah">
+<h3>Регистр результата операции DSAH<a class="headerlink" href="#dsah" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Имя</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Значение по умолчанию</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DSAH</p></td>
+<td><p>0x59 (0x39)</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Доступ</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>15:0</p></td>
+<td><p>R/W</p></td>
+<td><p>DSAH</p></td>
+<td><p>старшие 16 бит 32-битного аккумулятора DA</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dssd">
+<h3>Регистр переполнения DSSD<a class="headerlink" href="#dssd" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Имя</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Значение по умолчанию</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DSSD</p></td>
+<td><p>0x22 (0x02)</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Доступ</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>15:0</p></td>
+<td><p>R/W</p></td>
+<td><p>DSSD</p></td>
+<td><p>16-разрядное переполнение 32-разрядного аккумулятора DSA</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="id5">
+<h2>Примеры применения uDSC<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p>Пример конфигурации и использования, простая подпрограмма (AVRGCC), которая реализует 16-битную операцию умножения и возвращает 32-битный результат:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">unsigned</span> <span class="n">long</span> <span class="n">dsu_xmuluu</span><span class="p">(</span><span class="n">unsigned</span> <span class="n">short</span> <span class="n">dy</span><span class="p">,</span> <span class="n">unsigned</span> <span class="n">short</span> <span class="n">dx</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Ниже приведен код реализации ассемблерной функции C:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#include “udsc_def.inc”     ; opcode definitions</span>
+<span class="o">.</span><span class="k">global</span> <span class="n">dsu_xmuluu</span>          <span class="p">;</span> <span class="n">declare</span> <span class="k">for</span> <span class="n">called</span> <span class="kn">from</span> <span class="nn">C</span><span class="o">/</span><span class="n">C</span><span class="o">++</span> <span class="n">code</span>
+
+<span class="n">dsu_xmuluu</span><span class="p">:</span>
+<span class="n">out</span> <span class="n">DSDX</span><span class="p">,</span> <span class="n">r24</span>               <span class="p">;</span> <span class="n">load</span> <span class="n">DX</span>
+<span class="n">out</span> <span class="n">DSDY</span><span class="p">,</span> <span class="n">r22</span>               <span class="p">;</span> <span class="n">load</span> <span class="n">DY</span>
+<span class="n">ldi</span> <span class="n">r20</span><span class="p">,</span> <span class="n">XMULUU</span>             <span class="p">;</span> <span class="n">load</span> <span class="n">opcode</span>
+<span class="n">out</span> <span class="n">DSIR</span><span class="p">,</span> <span class="n">r20</span>               <span class="p">;</span> <span class="n">do</span> <span class="n">multiply</span>
+<span class="ow">in</span> <span class="n">r22</span><span class="p">,</span> <span class="n">DSAL</span>                <span class="p">;</span> <span class="p">{</span><span class="n">r23</span><span class="p">,</span> <span class="n">r22</span><span class="p">}</span> <span class="o">=</span> <span class="n">AL</span>
+<span class="ow">in</span> <span class="n">r24</span><span class="p">,</span> <span class="n">DSAH</span>                <span class="p">;</span> <span class="p">{</span><span class="n">r25</span><span class="p">,</span> <span class="n">r24</span><span class="p">}</span> <span class="o">=</span> <span class="n">AH</span>
+<span class="n">ret</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="clk.html" class="btn btn-neutral float-left" title="Система тактирования" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright b-oleg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

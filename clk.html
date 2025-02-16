@@ -1,0 +1,565 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Система тактирования &mdash; LGT8FXP 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Ускоритель вычислений (uDSC)" href="udsc.html" />
+    <link rel="prev" title="Ядро" href="core.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            LGT8FXP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Описание</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Ядро</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Система тактирования</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Распределение тактирования</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cpu-clk">CPU_clk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#peri-clk">Peri_clk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#e2p-clk">E2P_clk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asy-clk">Asy_clk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wdt-clk">WDT_clk</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">Выбор источника тактирования</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Синхронизация источника тактовых импульсов</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">Управление предделителем системы тактирования</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rc">Калибровка внутреннего RC-генератора</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">Описание регистров</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rcmcal">Регистр калибровки высокочастотного генератора 32МГц - RCMCAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rckcal">Регистр калибровки низкочастотного генератора 32кГц - RCKCAL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pmcr">Регистр управления источником синхронизации - PMCR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clkpr">Регистр управления предделителем- CLKPR</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="udsc.html">Ускоритель вычислений (uDSC)</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LGT8FXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Система тактирования</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/clk.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>Система тактирования<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<section id="id2">
+<h2>Распределение тактирования<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>Семейство микроконтроллеров LGT8FX8P поддерживает три основных источника тактовой частоты:</p>
+<ul class="simple">
+<li><p>Внутренний калиброванный низкочастотный RC-генератор (32 кГц);</p></li>
+<li><p>Внутренний калиброванный низкочастотный RC-генератор (32 МГц);</p></li>
+<li><p>Внешний вход для кварцевого резонатора (32 кГц ~ 32 МГц).</p></li>
+</ul>
+<p>На рисунке ниже показана структурная схема системы распределения тактирования LGT8FX8P. «CMU» является центром управления тактовой частотой, отвечающим за разделение частот системной синхронизации, генерацию независимых тактовых импульсов для различных модулей, управление тактовой частотой и т. д.
+<img alt="sys clk" src="_images/clk-1.png" />
+В общих приложениях не все источники тактитрования должны работать одновременно. Чтобы снизить энергопотребление системы, управление питанием системы отключает неиспользуемые тактовые импульсы модулей в соответствии с различными режимами сна. Подробную информацию об эксплуатации см. в соответствующих главах, посвященных управлению энергопотреблением.</p>
+<section id="cpu-clk">
+<h3>CPU_clk<a class="headerlink" href="#cpu-clk" title="Link to this heading"></a></h3>
+<p>Используется для управления работой ядра LGT8FXP и SRAM. Например, управление общими рабочими регистрами, регистрами состояния и т.д. Если тактовая частота процессора остановлена, ядро не будет выполнять инструкции и вычисления. После того, как система выполнит инструкцию SLEEP для перехода в спящий режим, тактовая частота ядра будет отключена.</p>
+</section>
+<section id="peri-clk">
+<h3>Peri_clk<a class="headerlink" href="#peri-clk" title="Link to this heading"></a></h3>
+<p>Используется для управления большинством периферийных модулей, таких как таймер/счетчик, SPI, USART и т.д. Тактовый сигнал ввода-вывода также используется для управления внешним модулем прерываний. Если тактирование периферии останавлено в режиме сна, некоторые периферийные устройства, которые могут работать в независимом тактовом или асинхронном режиме, можно использовать для пробуждения системы. Например, функция распознавания адреса TWI может вывести из большинства спящих режимов, т.к. она работает в асинхронном режиме.</p>
+</section>
+<section id="e2p-clk">
+<h3>E2P_clk<a class="headerlink" href="#e2p-clk" title="Link to this heading"></a></h3>
+<p>Тактовый сигнал E2P_clk используется для генерации сигналов доступа к интерфейсу FLASH памяти. E2P_clk привязан к внутреннему высокочастотному RC-генератору 32 МГц, делённому на 32 (1 МГц). Если необходимо использовать модуль E2PCTL для чтения и записи внутренней программной FLASH-памяти или FLASH-памяти данных, необходимо включить этот генератор.</p>
+</section>
+<section id="asy-clk">
+<h3>Asy_clk<a class="headerlink" href="#asy-clk" title="Link to this heading"></a></h3>
+<p>Асинхронный таймер. Таймер/счетчик может управляться напрямую внешним тактовым сигналом или кварцевым генератором (32,768 КГц). Этот независимый режим часов позволяет таймеру продолжать работать, пока система находится в спящем режиме.</p>
+</section>
+<section id="wdt-clk">
+<h3>WDT_clk<a class="headerlink" href="#wdt-clk" title="Link to this heading"></a></h3>
+<p>Источник тактовой частоты внутреннего сторожевого таймера можно настроить на использование внутреннего низкочастотного RC-генератора 32 кГц или внутреннего высокочастотного RC-генератора 32 МГц, деленного на 16 (2 МГц). После включения системы источником тактовой частоты сторожевого таймера по умолчанию является низкочастотный RC-генератор с частотой 32 кГц.</p>
+</section>
+</section>
+<section id="id3">
+<h2>Выбор источника тактирования<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>В LGT8FX8P используется 4 сигнала для выбора источника тактирования. Управление источниками тактирования и переключение между ними осуществляется через регистр PMCR. Ниже представлена структурная схема:
+<img alt="sys clk" src="_images/clk-2.png" />
+Генератор «OSC» может работать в высокочастотном или низкочастотном режиме, его необходимо корректно настроить в соответствии с используемым внешним кварцевым резонатором. Внутренний RC-генератор состоит из высокочастотного и низкочастотного. Для управления этими источниками тактовой частоты используются 4 младших бита регистра PMCR.</p>
+<p>Соответствие бит следующее:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>PMCR</p></th>
+<th class="head"><p>Источник тактирования</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>PMCR[0] (RCMEN)</p></td>
+<td><p>32MHz RC-генератор, 1-вкючен, 0-выключен</p></td>
+</tr>
+<tr class="row-odd"><td><p>PMCR[1] (RCKEN)</p></td>
+<td><p>32KHz RC-генератор, 1-вкючен, 0-выключен</p></td>
+</tr>
+<tr class="row-even"><td><p>PMCR[2] (OSCMEN)</p></td>
+<td><p>400K ~ 32MHz кварцевый генератор, 1-вкючен, 0-выключен</p></td>
+</tr>
+<tr class="row-odd"><td><p>PMCR[3] (OSCKEN)</p></td>
+<td><p>32K ~ 400K кварцевый генератор, 1-вкючен, 0-выключен</p></td>
+</tr>
+</tbody>
+</table>
+<p>После включения системы LGT8FX8P в качестве источника тактовых импульсов по умолчанию используется высокочастотный внутренний RC-генератор с частотой 32МГц и делением на 8 (4МГц). Для изменения конфигурации необходимо использовать регистр PMCR и регистр предварительного делителя частоты системы CLKPR.
+Для изменения источника тактовых импульсов необходимо сначала включить требуемый источник синхронизации через PMCR[3:0], а затем дождаться его стабильного рабочего состояния.
+Например, если выбрать в качестве источника тактовых импульсов внешний кварцевый генератор, который не сможет начать генерацию из-за ошибок конфигурации или поломки кварцевого резонатора, то после переключения система перестанет работать. Поэтому, для увеличения надежности системы, рекомендуется включать сторожевой таймер, чтобы избежать подобных проблем с точки зрения разработки программного обеспечения.
+После включения генератора и ожидания его стабильной работы, можно переключить источник тактирования через PMCR[6:5]. Бит PMCR[5] (CLKSS) используется для выбора внутреннего RC-генератора или внешнего кварцевого генератора, а PMCR[6] (CLKFS) используется для выбора высокочатотного или низкочастотного источника тактовой частоты.</p>
+<p>Выбор основного источника тактирования:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>PMCR[6]<br>(CLKFS)</p></th>
+<th class="head text-center"><p>PMCR[5]<br>(CLKSS)</p></th>
+<th class="head text-left"><p>Источник тактирования</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>0</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-left"><p>Внутренний RC-генератор 32МГц (по умолчанию)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>0</p></td>
+<td class="text-center"><p>1</p></td>
+<td class="text-left"><p>Внешний высокочастотный кварцевый резонатор 400кГц ~ 32МГц</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>1</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-left"><p>Внутренний RC-генератор 32кГц</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>1</p></td>
+<td class="text-center"><p>1</p></td>
+<td class="text-left"><p>Внешний низкочастотный кварцевый резонатор 32кГц ~ 400кГц</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id4">
+<h3>Синхронизация источника тактовых импульсов<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>Чтобы защитить регистр PMCR от случайного изменения, необходимо выполнять настройку строго в соответствии с указанным временем. Самый старший бит регистра PMCR[7] (PMCE) используется для управления записью. Перед изменением других битов регистра PMCR необходимо сначала установить PMCE в 1 и изменить значения других регистров PMCR в течение 6 циклов после операции установки. После 6 циклов прямые модификации PMCR станут неэффективными.
+Рассмотрим в качестве примера переключение на внешний высокочастотный кварцевый генератор. Ниже перечислены рекомендуемые шаги:</p>
+<ol class="arabic simple">
+<li><p>Включить источник синхронизации:</p>
+<ul class="simple">
+<li><p>Установить PMCE=1;</p></li>
+<li><p>В течение 6 циклов установите OSCMEN=1, чтобы включить внешний высокочастотный режим кварцевого генератора;</p></li>
+<li><p>Дождитесь стабилизации внешнего кварцевого генератора (время ожидания зависит от кварцевого генератора, обычно достаточно фиксированного времени ожидания).</p></li>
+</ul>
+</li>
+<li><p>Переключение основного источника синхронизации:</p>
+<ul class="simple">
+<li><p>Установить PMCE=1;</p></li>
+<li><p>В течение 6 циклов установите PMCR[6:5]=01, и система автоматически переключит источник тактовых импульсов на внешний кварцевый генератор;</p></li>
+<li><p>Выполните несколько операций NOP для повышения стабильности (необязательно).</p></li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<div><p>Примечание: в вышеописанной операции переключения источника тактовых импульсов необходимо убедиться, что текущий генератор работает нормально. После переключения на внешний кварцевый генератор можно отключить внутренний RC-генератор.</p>
+</div></blockquote>
+</section>
+</section>
+<section id="id5">
+<h2>Управление предделителем системы тактирования<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p>LGT8FX8P оснащен предварительным делителем тактовой частоты, которым можно управлять с помощью регистра CLKPR. Эта функция может быть использована для снижения энергопотребления системы, когда не требуется высокая вычислительная мощность. Предделитель используется для всех источников тактовой частоты, поддерживаемых системой. Он влияет на тактовую частоту ядра и, следовательно, на все периферийные устройства.
+При изменении параметров предварительного делителя тактовой частоты, гарантируется отсутствие сбоев в процессе переключения. Переключение частоты выполняется после изменения регистра CLKPR и вступает в силу максимум через 2~3 текущих цикла системных часов.</p>
+<p>Чтобы избежать неправильной работы регистра делителя тактовой частоты, модификация CLKPR также должна следовать специальной процедуре синхронизации:</p>
+<ol class="arabic simple">
+<li><p>Установите бит разрешения изменения предварительного делителя тактовой частоты CLKPCE=1, а все остальные биты CLKPR=0;</p></li>
+<li><p>В течение четырех циклов запишите требуемое значение в CLKPS и одновременно запишите 0 в CLKPR.</p></li>
+</ol>
+<p>Перед изменением регистра предварительного делителя тактовой частоты необходимо отключить функцию прерывания, чтобы гарантировать возможность завершения последовательности записи. Конкретное определение основного регистра предварительного делителя тактовой частоты CLKPR см. в разделе описания регистров в данной главе.</p>
+<section id="rc">
+<h3>Калибровка внутреннего RC-генератора<a class="headerlink" href="#rc" title="Link to this heading"></a></h3>
+<p>LGT8FX8P содержит два калибруемых RC-генератора, которые после калибровки могут достигать точности в пределах ±1%. Один из них с частотой 32 МГц используется по умолчанию в качестве тактовой частоты системы. Перед выпуском LGT8FX8P RC-генераторы были откалиброваны, и значение калибровки было записано в область информации о конфигурации системы. В процессе включения системы эти калибровочные значения будут считаны во внутренний регистр, с помощью которого частота RC-генераторов будет повторно откалибрована. Калибровочный регистр расположен в адресном пространстве ввода-вывода, и пользовательская программа может выполнять чтение и запись.
+Для применений с особыми требованиями к частоте, частотный выход внутреннего генератора можно регулировать, изменяя значение калибровочного регистра. Изменение калибровочного регистра не приведет к изменению заводской конфигурации. При повторном включении системы или повторной загрузке битов конфигурации, инициированных пользователем, заводские настройки калибровочного регистра будут восстановлены.</p>
+</section>
+</section>
+<section id="id6">
+<h2>Описание регистров<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<section id="rcmcal">
+<h3>Регистр калибровки высокочастотного генератора 32МГц - RCMCAL<a class="headerlink" href="#rcmcal" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Имя</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Значение по умолчанию</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>RCMCAL</p></td>
+<td><p>0x66</p></td>
+<td><p>Заводская конфигурация</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Доступ</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7:0</p></td>
+<td><p>R/W</p></td>
+<td><p>RCMCAL</p></td>
+<td><p>Значение калибровки</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p>После включения питания системы значение регистра будет заменено значением калибровки из информации о конфигурации системы</p>
+</div></blockquote>
+</section>
+<section id="rckcal">
+<h3>Регистр калибровки низкочастотного генератора 32кГц - RCKCAL<a class="headerlink" href="#rckcal" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Имя</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Значение по умолчанию</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>RCKCAL</p></td>
+<td><p>0x67</p></td>
+<td><p>Заводская конфигурация</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Доступ</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7:0</p></td>
+<td><p>R/W</p></td>
+<td><p>RCKCAL</p></td>
+<td><p>Значение калибровки</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p>После включения питания системы значение регистра будет заменено значением калибровки из информации о конфигурации системы</p>
+</div></blockquote>
+</section>
+<section id="pmcr">
+<h3>Регистр управления источником синхронизации - PMCR<a class="headerlink" href="#pmcr" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Регистр</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Значение по умолчанию</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>PMCR</p></td>
+<td><p>0xF2</p></td>
+<td><p>0x03</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Доступ</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>R/W</p></td>
+<td><p>RCMEN</p></td>
+<td><p>Встроенный RC-генератор 32 МГц,<br>1 – включен, 0 – выключен</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>R/W</p></td>
+<td><p>RCKEN</p></td>
+<td><p>Встроенный RC-генератор 32 кГц,<br>1 – включен, 0 – выключен</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>R/W</p></td>
+<td><p>OSCMEN</p></td>
+<td><p>Внешний высокочастотный кварцевый резонатор,<br>1 – включен, 0 – выключен</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>R/W</p></td>
+<td><p>OSCKEN</p></td>
+<td><p>Внешний низкочастотный кварцевый резонатор,<br>1 – включен, 0 – выключен</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>R/W</p></td>
+<td><p>WCLKS</p></td>
+<td><p>Выбор источника тактовой частоты WDT:<br>0 – Высокочастотный RC-генератор 32 МГц с делением на 16,<br>1 – Внутренний RC-генератор 32 кГц.</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>R/W</p></td>
+<td><p>CLKSS</p></td>
+<td><p>Выбор основного источника тактирования</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>R/W</p></td>
+<td><p>CLKFS</p></td>
+<td><p>Выбор основного источника тактирования</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>R/W</p></td>
+<td><p>PMCE</p></td>
+<td><p>Уравляющий бит изменения регистра</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p>Перед изменением регистра PMCR необходимо установить бит PMCE, а затем в течение четырех тактов установить значения других битов.</p>
+</div></blockquote>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>PMCR[6]<br>(CLKFS)</p></th>
+<th class="head text-center"><p>PMCR[5]<br>(CLKSS)</p></th>
+<th class="head text-left"><p>Источник тактирования</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>0</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-left"><p>Внутренний RC-генератор 32МГц (по умолчанию)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>0</p></td>
+<td class="text-center"><p>1</p></td>
+<td class="text-left"><p>Внешний высокочастотный кварцевый резонатор 400кГц ~ 32МГц</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>1</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-left"><p>Внутренний RC-генератор 32кГц</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>1</p></td>
+<td class="text-center"><p>1</p></td>
+<td class="text-left"><p>Внешний низкочастотный кварцевый резонатор 32кГц ~ 400кГц</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="clkpr">
+<h3>Регистр управления предделителем- CLKPR<a class="headerlink" href="#clkpr" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Регистр</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Значение по умолчанию</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CLKPR</p></td>
+<td><p>0x61</p></td>
+<td><p>0x03</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Доступ</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0:3</p></td>
+<td><p>R/W</p></td>
+<td><p>CLKPS</p></td>
+<td><p>Коэффициент деления</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>Не используется</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>R/W</p></td>
+<td><p>CKOEN0</p></td>
+<td><p>Вывод тактирования в порт PB0</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>R/W</p></td>
+<td><p>CKOEN1</p></td>
+<td><p>Вывод тактирования в порт PE5</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>R/W</p></td>
+<td><p>WCE</p></td>
+<td><p>Уравляющий бит изменения регистра</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p>Перед изменением других битов регистра CLKPR необходимо установить значение WCE=1, а затем остальные биты должны быть установлены в течении следующих четырех системных тактов. По истечении четырех тактов значение WCE автоматически обнуляется.</p>
+</div></blockquote>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>CLKPS3</p></th>
+<th class="head"><p>CLKPS2</p></th>
+<th class="head"><p>CLKPS1</p></th>
+<th class="head"><p>CLKPS0</p></th>
+<th class="head"><p>Значение</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>8 (по умолчанию)</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>16</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>32</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>64</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>128</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>256</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p>Другие значения - Зарезервированы</p>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core.html" class="btn btn-neutral float-left" title="Ядро" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="udsc.html" class="btn btn-neutral float-right" title="Ускоритель вычислений (uDSC)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright b-oleg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
