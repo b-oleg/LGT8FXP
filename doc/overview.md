@@ -2,7 +2,10 @@
 
 ![Logic Green](overview-logo.png)
 
-LGT8F328P — это 8-битный RISC микроконтроллер, разработанный компанией Logic Green Technologies, аналог микроконтроллера ATmega328P от Microchip (ранее Atmel). 
+Микроконтроллеры серии LGT8FXP, разработанные компанией Logic Green Technologies, содержат три варианта микросхем:
+- LGT8F88P,
+- LGT8F168P,
+- LGT8F328P.
 
 ## Функции
 + Высокопроизводительное 8-битное ядро LGT8FXP с низким энергопотреблением
