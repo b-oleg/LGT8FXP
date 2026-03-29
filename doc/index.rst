@@ -12,4 +12,5 @@ Welcome!
    core.md
    clk.md
    udsc.md
+   interrupts.md
    
