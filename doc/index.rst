@@ -13,4 +13,5 @@ Welcome!
    clk.md
    udsc.md
    interrupts.md
+   external-interrupts.md
    
