@@ -14,4 +14,4 @@ Welcome!
    udsc.md
    interrupts.md
    external-interrupts.md
-   
+   registers.md
