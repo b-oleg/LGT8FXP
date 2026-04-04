@@ -17,7 +17,7 @@
 | $E1  | OCPUE   | PUE7   | PUE6   | PUE5   | PUE4   | PUE3   | PUE2   | PUE1   | PUE0   |
 | $E0  | HDR     | -      | -      | HDR5   | HDR4   | HDR3   | HDR2   | HDR1   | HDR0   |
 | $DE  | DAPTE   | DAPTE  | -      | -      | -      | -      | -      | -      | -      |
-| $DD  | DAPTR   | DAPTP  | DAP Trimming |
+| $DD  | DAPTR   | DAPTP  | Trimming |
 | $DC  | DAPCR   | DAPEN  | GA1    | GA0    | DNS2   | DNS1   | DNS0   | DPS1   | DPS0   |
 | $CF  | LDOCR   | WCE    |        |        |        | PDEN   | VSEL2  | VSEL1  | VSEL0  |
 | $CE  | VCAL2   |
@@ -118,9 +118,9 @@
 
 ## DirectIO Registers
 
-| Addr | Name    | BIT7   | BIT6   | BIT5   | BIT4   | BIT3   | BIT2   | BIT1   | BIT0   |
-|------|---------|--------|--------|--------|--------|--------|--------|--------|--------|
-| $5F  | SREG    | I      | T      | H      | S      | V      | N      | Z      | C      |
+| Addr | Name    | BIT7   | BIT6   | BIT5   | BIT4   | BIT3     | BIT2     | BIT1     | BIT0     |
+|------|---------|--------|--------|--------|--------|----------|----------|----------|----------|
+| $5F  | SREG    | I      | T      | H      | S      | V        | N        | Z        | C        |
 | $5E  | SPH     | 
 | $5D  | SPL     | 
 | $5C  | E2PD3   | 
@@ -183,4 +183,4 @@
 | $23  | PINB    |
 | $22  | DSSD    |
 | $21  | DSIR    |
-| $20  | DSCR    | DSUEN | MM | D1 | D0 | - | DSN | DSZ | DSC |
+| $20  | DSCR    | DSUEN  | MM     | D1     | D0     | -        | DSN      | DSZ      | DSC      |
