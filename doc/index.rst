@@ -10,6 +10,7 @@ Welcome!
 
    overview.md
    core.md
+   memory.md
    clk.md
    udsc.md
    interrupts.md
