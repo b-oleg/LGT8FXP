@@ -1,0 +1,16 @@
+{
+  "name": "LGT8FXP",
+  "version": "0.0.1",
+  "keywords": "LGT8FXP, LGT8F328P, LGT8F328",
+  "description": "Library for LGT8FXP microcontrollers.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/b-oleg/LGT8FXP"
+  },
+  "platforms": "lgt8f",
+  "build": {
+    "flags": [
+      "-Wl,-u,__vectors_lgt,--section-start=.e2prom=0x7800"
+    ]
+  }
+}
