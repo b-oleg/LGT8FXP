@@ -21,7 +21,4 @@ lib_deps =
     https://github.com/b-oleg/LGT8FXP.git
 ```
 
-**Benefits:** Full control over hardware registers, smaller binary sizes, and optimized performance.
-
-
 In addition, there is a translation of part of the [documentation](https://b-oleg.github.io/LGT8FXP) for the microcontroller.
