@@ -4,14 +4,14 @@
 #include <lgt/io.h>
 
 typedef struct {
-	uint8_t Bit0 :1;
-	uint8_t Bit1 :1;
-	uint8_t Bit2 :1;
-	uint8_t Bit3 :1;
-	uint8_t Bit4 :1;
-	uint8_t Bit5 :1;
-	uint8_t Bit6 :1;
-	uint8_t Bit7 :1;
+	uint8_t B0 :1;
+	uint8_t B1 :1;
+	uint8_t B2 :1;
+	uint8_t B3 :1;
+	uint8_t B4 :1;
+	uint8_t B5 :1;
+	uint8_t B6 :1;
+	uint8_t B7 :1;
 } bits_t;
 
 #ifdef PORTA
@@ -36,6 +36,18 @@ typedef struct {
 #define POD (*((volatile bits_t*)&PORTD))
 #define PID (*((volatile bits_t*)&PIND))
 #define PDD (*((volatile bits_t*)&DDRD))
+#endif
+
+#ifdef PORTE
+#define POE (*((volatile bits_t*)&PORTE))
+#define PIE (*((volatile bits_t*)&PINE))
+#define PDE (*((volatile bits_t*)&DDRE))
+#endif
+
+#ifdef PORTF
+#define POF (*((volatile bits_t*)&PORTF))
+#define PIF (*((volatile bits_t*)&PINF))
+#define PDF (*((volatile bits_t*)&DDRF))
 #endif
 
 #endif // _BITS_H_

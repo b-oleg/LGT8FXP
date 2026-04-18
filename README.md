@@ -15,7 +15,7 @@ board = LGT8F328P  ; Or your specific MCU board
 ; framework = <-- Comment or remove this line
 
 ; change MCU frequency
-board_build.f_cpu = 30000000L
+board_build.f_cpu = 30000000
 
 lib_deps =
     https://github.com/b-oleg/LGT8FXP.git
