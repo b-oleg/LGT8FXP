@@ -1,0 +1,1097 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Память &mdash; LGT8FXP 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Система тактирования" href="clk.html" />
+    <link rel="prev" title="Ядро" href="core.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            LGT8FXP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Описание</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Ядро</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Память</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Обзор</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flash">Модуль ПЗУ (FLASH)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sram">Модуль ОЗУ (SRAM)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">Регистры ввода-вывода общего назначения</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">Пространство регистров периферии</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#flash-e2pctl">FLASH-контроллер (E2PCTL)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#e2pctl">Регистр данных E2PCTL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#e2prom-e2pctl">Алгоритм эмуляции интерфейса E2PROM контроллером E2PCTL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Алгоритм эмуляции интерфейса E2PROM контроллером E2PCTL (продолжение)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Режим непрерывного программирования E2PCTL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Чтение и запись программного FLASH-пространства через E2PCTL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Порядок работы с интерфейсом E2PCTL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9">Доступ к программному FLASH-пространству через интерфейс E2PCTL</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id10">1. Стирание страницы FLASH-памяти</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11">2. Операция записи во FLASH-память</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">Доступ к эмулируемому пространству E2PROM через интерфейс E2PCTL</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id13">Эффективное управление FLASH-памятью через E2PCTL</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14">Меры защиты операций с FLASH-памятью</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id15">Описание регистров</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#eear">EEAR - Регистр адреса</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id16">Описание битов</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#eedr-e2pd0-0">EEDR/E2PD0 - Регистр данных 0</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id17">Описание битов</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#e2pd1-1">E2PD1 - Регистр данных 1</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id18">Описание битов</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#e2pd2-2">E2PD2 - Регистр данных 2</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id19">Описание битов</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#e2pd3-3">E2PD3 - Регистр данных 3</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id20">Описание битов</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#eccr">ECCR - Регистр управления</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id21">Описание битов</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#eecr">EECR - Регистр управления доступом</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id22">Описание битов</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gpior2-2">GPIOR2 - Регистр ввода-вывода 2</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id23">Описание битов</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gpior1-1">GPIOR1 - Регистр ввода-вывода 1</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id24">Описание битов</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#gpior0-0">GPIOR0 - Регистр ввода-вывода 0</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id25">Описание битов</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="clk.html">Система тактирования</a></li>
+<li class="toctree-l1"><a class="reference internal" href="udsc.html">Ускоритель вычислений</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interrupts.html">Прерывания</a></li>
+<li class="toctree-l1"><a class="reference internal" href="external-interrupts.html">Внешние прерывания</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dac.html">Цифро-аналоговый преобразователь (ЦАП)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adc.html">Аналого-цифровой преобразователь (АЦП)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="registers.html">Карта регистров</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LGT8FXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Память</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/memory.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>Память<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<section id="id2">
+<h2>Обзор<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>В данной главе описана доступная память в серии микроконтроллеров <strong>LGT8FX8P</strong>. Архитектура поддерживает два основных типа внутреннего адресного пространства: пространство данных и пространство программ. <strong>LGT8FX8P</strong> также содержит внутреннюю <strong>FLASH</strong>-память данных, которая через внутренний контроллер реализует функциональность хранения данных с интерфейсом <strong>EEPROM</strong>. Кроме того, в системе <strong>LGT8FX8P</strong> присутствуют специальные ячейки памяти для хранения конфигурации системы и глобального уникального идентификатора (<strong>GUID</strong>) микросхемы.</p>
+<p>Серия микроконтроллеров <strong>LGT8FX8P</strong> включает четыре различные модели: <strong>LGT8F88P/168P/328P</strong>. Периферийные устройства и корпуса этих четырёх моделей полностью совместимы. Отличия заключаются в объёме программной <strong>FLASH</strong>-памяти и внутренней <strong>SRAM</strong>-памяти данных. В следующей таблице наглядно представлены различные конфигурации памяти для серии <strong>LGT8FX8P</strong>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Устройство</p></th>
+<th class="head"><p>FLASH</p></th>
+<th class="head"><p>SRAM</p></th>
+<th class="head"><p>E2PROM</p></th>
+<th class="head"><p>Вектор прерывания</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>LGT8F88P</p></td>
+<td><p>8 КБ</p></td>
+<td><p>1 КБ</p></td>
+<td><p>2 КБ</p></td>
+<td><p>1 командное слово</p></td>
+</tr>
+<tr class="row-odd"><td><p>LGT8F168P</p></td>
+<td><p>16 КБ</p></td>
+<td><p>1 КБ</p></td>
+<td><p>4 КБ</p></td>
+<td><p>2 командных слова</p></td>
+</tr>
+<tr class="row-even"><td><p>LGT8F328P</p></td>
+<td><p>32 КБ</p></td>
+<td><p>2 КБ</p></td>
+<td><p>0/1/2/4/8 КБ<br>(настраивается,<br>разделяется с FLASH)</p></td>
+<td><p>2 командных слова</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>LGT8F328P</strong> не имеет отдельного внутреннего <strong>FLASH</strong>-пространства для эмуляции интерфейса <strong>E2PROM</strong>. Пространство памяти для эмуляции <strong>E2PROM</strong> разделяется с программной <strong>FLASH</strong>-памятью. Пользователь может выбрать подходящую конфигурацию в соответствии с требованиями приложения.</p>
+<p>Из-за особенностей реализации эмуляции интерфейса <strong>E2PROM</strong> системе требуется вдвое больше программной <strong>FLASH</strong>-памяти для создания объёма эмуляции <strong>E2PROM</strong>. Например, для <strong>LGT8F328P</strong>: если пользователь настраивает <strong>1 КБ</strong> пространства <strong>E2PROM</strong>, то <strong>2 КБ</strong> программного пространства будут зарезервированы, а оставшиеся <strong>30 КБ</strong> <strong>FLASH</strong> будут доступны для хранения программы.</p>
+<p>Таблица конфигурации разделения программной <strong>FLASH</strong> и <strong>E2PROM</strong> для <strong>LGT8F328P</strong>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>FLASH</p></th>
+<th class="head"><p>E2PROM</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>32 КБ</p></td>
+<td><p>0 КБ</p></td>
+</tr>
+<tr class="row-odd"><td><p>30 КБ</p></td>
+<td><p>1 КБ</p></td>
+</tr>
+<tr class="row-even"><td><p>28 КБ</p></td>
+<td><p>2 КБ</p></td>
+</tr>
+<tr class="row-odd"><td><p>24 КБ</p></td>
+<td><p>4 КБ</p></td>
+</tr>
+<tr class="row-even"><td><p>16 КБ</p></td>
+<td><p>8 КБ</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="flash">
+<h2>Модуль ПЗУ (FLASH)<a class="headerlink" href="#flash" title="Link to this heading"></a></h2>
+<p>Микроконтроллеры серии LGT8FX8P содержат внутрикристальное внутрисхемно программируемое FLASH-устройство для хранения программ объёмом 8/16/32 КБ.</p>
+<p>Программная FLASH-память выдерживает не менее 100 000 циклов стирания/записи. В LGT8FX8P интегрирован контроллер интерфейса FLASH, который обеспечивает внутрисистемное программирование (ISP) и возможность самообновления программы. Подробная информация приведена в соответствующем разделе данной главы, посвящённом контроллеру интерфейса FLASH.</p>
+<p>К программному пространству можно обращаться напрямую (читать) с помощью инструкции <code class="docutils literal notranslate"><span class="pre">LPM</span></code>, что позволяет реализовывать прикладные таблицы констант. Кроме того, пространство программной FLASH отображается в системное пространство данных, поэтому пользователь также может обращаться к FLASH-памяти, используя инструкции <code class="docutils literal notranslate"><span class="pre">LD/LDD/LDS</span></code>. Пространство программ отображается в область данных, начиная с адреса <code class="docutils literal notranslate"><span class="pre">0x4000</span></code>, как показано на рисунке:</p>
+<p><img alt="FLASH-память" src="_images/memory-flash.png" /></p>
+</section>
+<section id="sram">
+<h2>Модуль ОЗУ (SRAM)<a class="headerlink" href="#sram" title="Link to this heading"></a></h2>
+<p>Микроконтроллеры серии LGT8FX8P являются относительно сложными микроконтроллерами и поддерживают множество различных типов периферийных устройств. Контроллеры этих устройств размещены в пространстве из 64 регистров ввода-вывода (I/O). К ним можно обращаться напрямую через инструкции <code class="docutils literal notranslate"><span class="pre">IN/OUT</span></code>. Регистры управления некоторых других периферийных устройств находятся в области <code class="docutils literal notranslate"><span class="pre">0x60</span></code> – <code class="docutils literal notranslate"><span class="pre">0xFF</span></code>. Поскольку эта область отображается в пространство данных, доступ к ней возможен только через инструкции <code class="docutils literal notranslate"><span class="pre">ST/STS/STD</span></code> и <code class="docutils literal notranslate"><span class="pre">LD/LDS/LDD</span></code>.</p>
+<p>Системное пространство данных LGT8FX8P начинается с адреса <code class="docutils literal notranslate"><span class="pre">0</span></code> и включает в себя отображение файла рабочих регистров общего назначения, пространства I/O, расширенного пространства I/O и внутренней SRAM данных. Первые 32 байта адресуют 32 рабочих регистра общего назначения ядра LGT8FX8P. Следующие 64 адреса — это стандартное пространство I/O, доступное напрямую через инструкции <code class="docutils literal notranslate"><span class="pre">IN/OUT</span></code>. Затем следуют 160 адресов расширенного пространства I/O, а после них — до 2 КБ данных SRAM. Часть пространства с адреса <code class="docutils literal notranslate"><span class="pre">0x4000</span></code> по <code class="docutils literal notranslate"><span class="pre">0xFFFF</span></code> отображает программную FLASH-память.</p>
+<p>Внутренняя SRAM-память объёмом 1/2 КБ отображается в две области. Область с <code class="docutils literal notranslate"><span class="pre">0x0100</span></code> по <code class="docutils literal notranslate"><span class="pre">0x0900</span></code> доступна ядру для чтения/записи 8-битными байтами. Область с <code class="docutils literal notranslate"><span class="pre">0x2100</span></code> по <code class="docutils literal notranslate"><span class="pre">0x2900</span></code> — это пространство доступа шириной шины 16 бит. Отображение SRAM в старшие адреса начиная с <code class="docutils literal notranslate"><span class="pre">0x2100</span></code> используется главным образом для совместной работы с модулем <a class="reference internal" href="udsc.html"><span class="std std-doc">uDSU</span></a>, обеспечивая эффективное хранение 16-битных данных. При программировании, добавив смещение <code class="docutils literal notranslate"><span class="pre">0x2000</span></code> к адресу обычной 8-битной переменной, можно переключиться в 16-битный режим доступа.</p>
+<p>Система поддерживает 5 различных режимов адресации, охватывающих всё пространство данных: прямая адресация, косвенная со смещением, косвенная, косвенная с предварительным уменьшением адреса, косвенная с последующим увеличением адреса. Рабочие регистры общего назначения <code class="docutils literal notranslate"><span class="pre">R26</span></code>–<code class="docutils literal notranslate"><span class="pre">R31</span></code> используются как указатели адреса при косвенной адресации. Косвенная адресация позволяет обращаться ко всему пространству данных. Косвенная адресация со смещением позволяет обращаться к 63 адресам относительно базового адреса в регистрах Y/Z.</p>
+<p>При использовании режима косвенной адресации с автоматическим увеличением/уменьшением адреса регистры X/Y/Z автоматически увеличиваются или уменьшаются аппаратно до или после доступа. Подробнее см. в описании [системы инструкций].</p>
+<p>16-битные регистры X/Y/Z и связанные с ними режимы автоадресации (увеличение, уменьшение) также играют важную роль в 16-битном расширенном режиме. В этом режиме можно использовать инструкции <code class="docutils literal notranslate"><span class="pre">LD/ST</span></code> с автоматическим увеличением/уменьшением, что позволяет реализовать адресацию с автоматическим изменением адреса для переменных. Такой режим очень эффективен при выполнении операций с массивами. Подробнее см. в главе <a class="reference internal" href="udsc.html"><span class="std std-doc">Ускоритель цифровых вычислений</span></a> <a class="reference internal" href="udsc.html"><span class="std std-doc">(uDSU)</span></a>».</p>
+</section>
+<section id="id3">
+<h2>Регистры ввода-вывода общего назначения<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>В пространстве I/O LGT8FX8P имеется три регистра ввода-вывода общего назначения <code class="docutils literal notranslate"><span class="pre">GPIOR2/1/0</span></code>. Доступ к этим регистрам возможен с помощью инструкций <code class="docutils literal notranslate"><span class="pre">IN/OUT</span></code>, они предназначены для хранения пользовательских данных.</p>
+</section>
+<section id="id4">
+<h2>Пространство регистров периферии<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>Подробное описание пространства ввода-вывода см. в разделе <a class="reference internal" href="#"><span class="xref myst">«Обзор регистров»</span></a> в техническом описании LGT8FX8P.</p>
+<p>Все периферийные устройства на LGT8FX8P выделены в адресное пространство ввода-вывода. Доступ ко всем адресам адресного пространства ввода-вывода осуществляется с помощью инструкций <code class="docutils literal notranslate"><span class="pre">LD/LDS/LDDD</span></code> и <code class="docutils literal notranslate"><span class="pre">ST/STS/STD</span></code>. Передача данных осуществляется через 32 универсальных регистра. Доступ к регистрам ввода-вывода в диапазоне от <code class="docutils literal notranslate"><span class="pre">0x00</span></code> до <code class="docutils literal notranslate"><span class="pre">0x1F</span></code> осуществляется с помощью инструкций побитовой адресации <code class="docutils literal notranslate"><span class="pre">SBI</span></code> и <code class="docutils literal notranslate"><span class="pre">CBI</span></code>. Значение отдельного бита в этих регистрах можно проверить с помощью инструкций <code class="docutils literal notranslate"><span class="pre">SBIS</span></code> и <code class="docutils literal notranslate"><span class="pre">SBIC</span></code> для управления потоком
+выполнения программы. Подробности см. в описании <a class="reference internal" href="#"><span class="xref myst">набора инструкций</span></a>.</p>
+<p>При использовании инструкций <code class="docutils literal notranslate"><span class="pre">IN/OUT</span></code> для доступа к регистрам ввода-вывода необходимо адресовать диапазон от <code class="docutils literal notranslate"><span class="pre">0x00</span></code> до <code class="docutils literal notranslate"><span class="pre">0x3F</span></code>. При использовании инструкций <code class="docutils literal notranslate"><span class="pre">LD</span></code> или <code class="docutils literal notranslate"><span class="pre">ST</span></code> для доступа к пространству ввода-вывода следует обращаться по отображённому адресу пространства в едином пространстве данных системы (с добавлением смещения <code class="docutils literal notranslate"><span class="pre">0x20</span></code>). Другие регистры устройств, расположенные в расширенном пространстве I/O (<code class="docutils literal notranslate"><span class="pre">0x60</span></code>–<code class="docutils literal notranslate"><span class="pre">0xFF</span></code>), доступны только через инструкции <code class="docutils literal notranslate"><span class="pre">ST/STS/STD</span></code> и <code class="docutils literal notranslate"><span class="pre">LD/LDS/LDD</span></code>.</p>
+<p>Для совместимости с будущими устройствами зарезервированные биты при записи должны устанавливаться в <code class="docutils literal notranslate"><span class="pre">0</span></code>. Не следует выполнять операции записи в зарезервированных областях пространства ввода-вывода.</p>
+<p>Некоторые регистры содержат флаги состояния, которые сбрасываются (очищаются) записью в них <code class="docutils literal notranslate"><span class="pre">1</span></code>. Важно отметить, что инструкции <code class="docutils literal notranslate"><span class="pre">CBI</span></code> и <code class="docutils literal notranslate"><span class="pre">SBI</span></code> поддерживают только определённые биты, поэтому <code class="docutils literal notranslate"><span class="pre">CBI/SBI</span></code> могут работать только с регистрами, содержащими такие флаги состояния. Кроме того, инструкции <code class="docutils literal notranslate"><span class="pre">CBI/SBI</span></code> работают только с регистрами в диапазоне адресов от <code class="docutils literal notranslate"><span class="pre">0x00</span></code> до <code class="docutils literal notranslate"><span class="pre">0x1F</span></code>.</p>
+</section>
+<section id="flash-e2pctl">
+<h2>FLASH-контроллер (E2PCTL)<a class="headerlink" href="#flash-e2pctl" title="Link to this heading"></a></h2>
+<p>В LGT8FX8P реализован гибкий и надёжный контроллер чтения/записи EFLASH. Он позволяет использовать существующее в системе пространство данных FLASH для организации памяти с побайтовой адресацией (чтение/запись), что даёт возможность реализовать приложения, работающие по принципу E2PROM. При эмуляции интерфейса E2PROM используется алгоритм выравнивания износа, что позволяет примерно вдвое увеличить срок службы FLASH-памяти данных и обеспечивает не менее 100 000 циклов стирания/записи.</p>
+<p>Контроллер E2PCTL также поддерживает внутрисхемную запись и стирание программного FLASH-пространства, благодаря чему возможно программное самообновление прошивки. Доступ к программному FLASH-пространству через FLASH-контроллер поддерживает только построчное стирание (1024 байта) и чтение/запись с разрядностью 32 бита.</p>
+<p><strong>Структурная схема контроллера E2PCTL для LGT8F88D/168D</strong></p>
+<p><img alt="E2PCTL" src="_images/memory-e2pctl.png" /></p>
+<p>При доступе к пространству данных FLASH памяти для эмуляции функции E2PROM контроллер E2PCTL поддерживает ширину чтения/записи 8 и 32 бита. При доступе к пространству программной FLASH-памяти поддерживается операции стирания страниц, а также чтение и запись 32-битных данных. Поскольку минимальной адресуемой единицей внутренней FLASH в LGT8FX8P является 32-битное слово, рекомендуется использовать 32-битный доступ, особенно для операций записи. 32-битный доступ не только более эффективен, но и способствует увеличению срока службы ячеек FLASH-памяти.</p>
+<p><strong>Структурная схема контроллера E2PCTL для LGT8F328P</strong></p>
+<p><img alt="E2PCTL" src="_images/memory-e2pctl2.png" /></p>
+<p>В LGT8F328P нет отдельного модуля FLASH-памяти данных. Поэтому ядро ​​LGT8XP использует 32 КБ внутренней FLASH-памяти совместно с <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code>. Пользователи могут разделить это пространство FLASH-памяти на программное и информационное пространство по мере необходимости. Размер имитируемой <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> можно установить, настроив контроллер <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code>. <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> использует режим подкачки страниц для реализации логики имитируемой <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code>, при этом алгоритм использует страницы (1 КБ) в качестве единиц измерения. Таким образом, для имитации 1 КБ пространства <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> требуется 2 КБ пространства FLASH-памяти и так далее, для реализации 4 КБ <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> требуется 8 КБ пространства FLASH-памяти. Подробности реализации см. в описании <a class="reference internal" href="#"><span class="xref myst">реализации алгоритма работы</span></a> E2PCTL.</p>
+<section id="e2pctl">
+<h3>Регистр данных E2PCTL<a class="headerlink" href="#e2pctl" title="Link to this heading"></a></h3>
+<p>Контроллер <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> имеет внутренний буфер данных на 4 байта <code class="docutils literal notranslate"><span class="pre">E2PD0–3</span></code>. Этот 4-байтовый буфер образует 32-битный интерфейс данных для доступа к FLASH-памяти.</p>
+<p>Когда контроллер <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> работает в режиме побайтового чтения/записи, регистр <code class="docutils literal notranslate"><span class="pre">EEDR</span></code> используется как интерфейс для чтения байтов. <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> загружает данные в правильный буфер данных в зависимости от адресных битов <code class="docutils literal notranslate"><span class="pre">EEARL[1:0]</span></code>, а также дополняет данные ещё тремя байтами на основе текущего целевого адреса во FLASH-памяти. В итоге полученное полное 32-битное слово записывается во FLASH-память.</p>
+<p>Когда контроллер E2PCTL работает в 32-битном режиме чтения/записи, по-прежнему можно использовать регистр <code class="docutils literal notranslate"><span class="pre">EEDR</span></code> как общий интерфейс данных, при этом биты <code class="docutils literal notranslate"><span class="pre">EEARL[1:0]</span></code> служат для адресации внутреннего буфера данных, что позволяет читать или записывать полное 32-битное слово. Кроме того, возможен прямой доступ к регистрам буфера данных, отображённым в пространство ввода-вывода <code class="docutils literal notranslate"><span class="pre">E0–E3</span></code>.</p>
+<p>Схема доступа к данным при работе <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> в 8-битном побайтовом режиме чтения/записи:</p>
+<p><img alt="E2PCTL в 8-битном режиме" src="_images/memory-e2pctl8.png" /></p>
+<p>Схема доступа к данным E2PCTL, работающего в режиме чтения/записи 32-битных слов:</p>
+<p><img alt="E2PCTL в 32-битном режиме" src="_images/memory-e2pctl32.png" /></p>
+<p>Побайтовый режим используется для обратной совместимости с байтовым режимом чтения/записи LGT8FX8D. Встроенная FLASH-память LGT8FX8P имеет 32-битную ширину интерфейса. Использование <strong>32-битного</strong> режима чтения/записи значительно повысит эффективность и увеличит срок службы FLASH-памяти, поэтому <strong>рекомендуется использовать именно этот режим</strong>.</p>
+</section>
+<section id="e2prom-e2pctl">
+<h3>Алгоритм эмуляции интерфейса E2PROM контроллером E2PCTL<a class="headerlink" href="#e2prom-e2pctl" title="Link to this heading"></a></h3>
+<p>Как известно, перед записью во FLASH-память её необходимо предварительно стереть, а операция стирания выполняется постранично. Встроенная FLASH-память LGT8FX8P имеет размер страницы 1 КБ. Таким образом, для обновления одного байта данных на странице необходимо сначала стереть всю страницу целиком, затем записать обновлённый байт по целевому адресу и при этом восстановить остальные байты страницы. Такая операция не только требует много времени, но и несёт риск потери данных при внезапном пропадании питания.</p>
+<p>В <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> используется алгоритм страничного обмена (page swapping) для эмуляции <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code>. Этот алгоритм гарантирует, что при выполнении операции стирания страницы не произойдёт потери существующих данных даже в случае сбоя питания, например, при отключении напряжения. Кроме того, алгоритм страничного обмена попеременно использует две страницы пространства, что также увеличивает срок службы эмулируемого пространства <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code>.</p>
+<p>С точки зрения эффективности, контроллер <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> реализует режим непрерывного обновления данных, сокращая количество циклов стирания/записи при многократном обновлении данных.</p>
+<p>В реализации контроллер <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> управляет каждой страницей индивидуально и использует последние 2 байта каждой страницы для хранения информации о состоянии страницы. Поэтому при использовании эмулируемого пространства <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> объёмом более 1 КБ пользователю необходимо учитывать особую обработку при переходе через границу в 1 КБ. Последние <strong>2 байта</strong> каждого 1 КБ пространства зарезервированы для <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code>, и пользователь не может выполнять обычные операции чтения/записи с этими двумя байтами.</p>
+<p>Ниже приведена логическая схема алгоритма страничного обмена E2PCTL:</p>
+<p><img alt="E2PROM" src="_images/memory-e2prom1.png" /></p>
+</section>
+<section id="id5">
+<h3>Алгоритм эмуляции интерфейса E2PROM контроллером E2PCTL (продолжение)<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>Как показано на рисунке, внутри <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> используются две страницы для эмуляции пространства E2PROM размером в одну страницу. Одна из этих страниц помечена как текущая, другая — как страница подкачки. <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> использует последние <strong>2 байта</strong> страницы для хранения информации о состоянии страницы.</p>
+<p>Когда нам необходимо обновить какой-либо байт на странице (например, байт <code class="docutils literal notranslate"><span class="pre">A0</span></code> на рисунке выше), мы <strong>не стираем</strong> текущую страницу. Вместо этого сначала стирается страница подкачки. Затем текущая страница делится на три части:</p>
+<ol class="arabic simple">
+<li><p>Данные, расположенные <strong>перед</strong> <code class="docutils literal notranslate"><span class="pre">A0</span></code> (обозначим эту часть как <code class="docutils literal notranslate"><span class="pre">CP0</span></code>).</p></li>
+<li><p>Само обновляемое место (<code class="docutils literal notranslate"><span class="pre">A0</span></code> заменяется на <code class="docutils literal notranslate"><span class="pre">B0</span></code>).</p></li>
+<li><p>Данные, расположенные <strong>после</strong> <code class="docutils literal notranslate"><span class="pre">A0</span></code> (обозначим как <code class="docutils literal notranslate"><span class="pre">CP1</span></code>).</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> копирует данные <code class="docutils literal notranslate"><span class="pre">CP0</span></code> с текущей страницы в соответствующие адреса на странице подкачки, затем записывает обновлённые данные <code class="docutils literal notranslate"><span class="pre">B0</span></code> по соответствующему адресу на странице подкачки, и наконец копирует данные <code class="docutils literal notranslate"><span class="pre">CP1</span></code> на страницу подкачки.</p>
+<p>После выполнения этих операций данные уже перемещены, но состояние страницы ещё не обновлено. Поэтому если до этого момента произойдёт сбой питания или другая ошибка, операция обновления не будет завершена, а исходные данные не будут повреждены — это гарантирует целостность информации.</p>
+<p>Если всё прошло успешно, в самом конце процесса копирования <code class="docutils literal notranslate"><span class="pre">CP1</span></code>, <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> записывает обновлённое состояние страницы в информацию о странице (в ту, которая ранее была страницей подкачки), выполняя тем самым замену текущей страницы. После этого бывшая страница подкачки становится текущей.</p>
+<p>Процесс страничного обмена E2PCTL показан на рисунке ниже (шаги 1 → 2 → 3 → 4):</p>
+<p><img alt="E2PROM" src="_images/memory-e2prom2.png" /></p>
+<p>Когда эмулируемое пространство <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code>, сконфигурированное в системе, превышает 1 КБ, <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> по-прежнему использует страницу как минимальную единицу для реализации алгоритма эмуляции пространства <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code>. Например, если пользователь настроил область <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> объёмом 2 КБ, <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> фактически займёт пространство в 4 страницы (4 КБ), при этом две страницы объединяются в группу для эмуляции пространства <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> размером в одну страницу.</p>
+<p><img alt="E2PROM" src="_images/memory-e2prom3.png" /></p>
+<p>Важно отметить, что сконфигурированное пользователем пространство <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> объёмом 2 КБ не является непрерывным, поскольку последние <strong>2 байта каждой</strong> страницы используются для хранения информации о состоянии страницы.</p>
+</section>
+<section id="id6">
+<h3>Режим непрерывного программирования E2PCTL<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>Поскольку обновление через <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> приводит к страничному обмену, в процессе которого выполняется стирание страницы подкачки, это не только требует времени, но и увеличивает износ FLASH-памяти. Поэтому в <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> добавлен режим непрерывной записи. В этом режиме пользователь может последовательно обновлять область <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code>, а операция страничного обмена выполняется только в конце последовательности адресов. Для приложений, требующих непрерывного обновления целого блока данных, непрерывный режим более эффективен.</p>
+<p>Режим непрерывного программирования включается битом <code class="docutils literal notranslate"><span class="pre">SWM</span></code> в управляющем регистре <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> (<code class="docutils literal notranslate"><span class="pre">ECCR</span></code>). После активации непрерывного режима последующие операции записи будут напрямую записывать данные по соответствующему адресу на странице подкачки. В режиме <code class="docutils literal notranslate"><span class="pre">SWM</span></code> операция записи не выполняет копирование областей <code class="docutils literal notranslate"><span class="pre">CP0/CP1</span></code>. <strong>Перед записью последнего байта</strong> программное обеспечение отключает непрерывный режим с помощью бита <code class="docutils literal notranslate"><span class="pre">SWM</span></code>, а затем выполняет запись. После этого <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> выполняет полную операцию копирования <code class="docutils literal notranslate"><span class="pre">CP0/CP1</span></code> и обновляет информацию о состоянии страницы.</p>
+</section>
+<section id="id7">
+<h3>Чтение и запись программного FLASH-пространства через E2PCTL<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>С помощью контроллера <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> можно выполнять чтение и запись программного пространства FLASH-памяти. В отличие от эмуляции <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code>, доступ к FLASH-памяти через <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> требует полного программного управления. Порядок действий следующий:</p>
+<ol class="arabic simple">
+<li><p><strong>Стирание целевой страницы.</strong> Перед обновлением данных необходимо сначала стереть целевую страницу. Адрес страницы задаётся через регистр <code class="docutils literal notranslate"><span class="pre">EEAR</span></code>. Команды стирания страницы FLASH-памяти описаны в определении регистра <code class="docutils literal notranslate"><span class="pre">EECR</span></code>.</p></li>
+<li><p><strong>Запись в FLASH-память</strong> выполняется минимальной единицей — <strong>32 бита</strong>. Данные задаются через регистры <code class="docutils literal notranslate"><span class="pre">E2PD0–E2PD3</span></code>.</p></li>
+<li><p><strong>Целевой адрес</strong> задаётся регистром <code class="docutils literal notranslate"><span class="pre">EEAR</span></code>. Биты <code class="docutils literal notranslate"><span class="pre">EEAR[1:0]</span></code> игнорируются.</p></li>
+</ol>
+<p>Возможность чтения и записи FLASH-памяти через <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> позволяет реализовать функцию внутрисхемного обновления программы (ISP). Это очень полезно в приложениях, где требуется обновлять данные на месте или предоставлять возможность кастомизации продукта.</p>
+</section>
+<section id="id8">
+<h3>Порядок работы с интерфейсом E2PCTL<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<p>Управление контроллером <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> осуществляется через четыре регистра:</p>
+<ul class="simple">
+<li><p>управляющий регистр состояния <code class="docutils literal notranslate"><span class="pre">EECR</span></code>;</p></li>
+<li><p>регистр управления <code class="docutils literal notranslate"><span class="pre">ECCR</span></code>;</p></li>
+<li><p>регистр данных <code class="docutils literal notranslate"><span class="pre">EEDR</span></code> (а также <code class="docutils literal notranslate"><span class="pre">E2PD0–E2PD3</span></code>);</p></li>
+<li><p>регистр адреса <code class="docutils literal notranslate"><span class="pre">EEAR</span></code> (<code class="docutils literal notranslate"><span class="pre">EEARL/EEARH</span></code>).</p></li>
+</ul>
+<p>Регистр <code class="docutils literal notranslate"><span class="pre">ECCR</span></code> используется для настройки режима работы <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code>. Большинство параметров должны быть заданы до начала работы <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code>, обычно это делается при инициализации системы. Бит <code class="docutils literal notranslate"><span class="pre">SWM</span></code> в регистре <code class="docutils literal notranslate"><span class="pre">ECCR</span></code> включает режим непрерывной записи, этот бит необходимо устанавливать при реализации последовательных операций записи.</p>
+<p>Регистр <code class="docutils literal notranslate"><span class="pre">EECR</span></code> используется для выбора типа операции, например: чтение, стирание и т.д.</p>
+<p>Регистр <code class="docutils literal notranslate"><span class="pre">EEDR</span></code> служит интерфейсом для 8-битного байтового режима. Регистры <code class="docutils literal notranslate"><span class="pre">E2PD0–E2PD3</span></code> используются для операций чтения/записи в 32-битном режиме.</p>
+<p>Регистр <code class="docutils literal notranslate"><span class="pre">EEAR</span></code> задаёт целевой адрес для чтения/записи, а также адрес страницы для операций стирания страницы. Адрес страницы выравнивается по границе страницы. Размер одной страницы составляет 1 КБ. Важно помнить, что адрес, указанный в <code class="docutils literal notranslate"><span class="pre">EEAR</span></code>, является байтовым адресом.</p>
+</section>
+<section id="id9">
+<h3>Доступ к программному FLASH-пространству через интерфейс E2PCTL<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<p>Через интерфейс E2PCTL можно выполнять чтение, запись и стирание программного FLASH-пространства. Чтение и запись FLASH-пространства поддерживаются только с шириной доступа 32 бита. Операция стирания выполняется постранично; размер каждой страницы составляет 1 КБ (256 × 32 бита).</p>
+<p>Перед записью в программное FLASH-пространство необходимо стереть страницу, содержащую целевой адрес. E2PCTL при записи в программное FLASH-пространство не поддерживает непрерывный режим; пользователь должен выполнять операции записи последовательно. Ниже приведён порядок операций стирания и записи программного FLASH-пространства.</p>
+<section id="id10">
+<h4>1. Стирание страницы FLASH-памяти<a class="headerlink" href="#id10" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Установите в <code class="docutils literal notranslate"><span class="pre">EEAR[14:0]</span></code> адрес целевой страницы, которую необходимо стереть. Размер страницы FLASH-памяти — 1 КБ, поэтому биты <code class="docutils literal notranslate"><span class="pre">EEAR[14:10]</span></code> используются как адрес страницы, а <code class="docutils literal notranslate"><span class="pre">EEAR[9:0]</span></code> должны быть установлены в <strong>0</strong>.</p></li>
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EEPM[3:0]</span></code> = <code class="docutils literal notranslate"><span class="pre">1X01</span></code>, где бит <code class="docutils literal notranslate"><span class="pre">EEPM[2]</span></code> может быть <code class="docutils literal notranslate"><span class="pre">0</span></code> или <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EEMPE</span></code> = <code class="docutils literal notranslate"><span class="pre">1</span></code>, при этом <code class="docutils literal notranslate"><span class="pre">EEPE</span></code> = <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p>В течение четырёх тактов установите <code class="docutils literal notranslate"><span class="pre">EEPE</span></code> = <code class="docutils literal notranslate"><span class="pre">1</span></code> для запуска процесса стирания страницы FLASH-памяти.</p></li>
+</ul>
+</section>
+<section id="id11">
+<h4>2. Операция записи во FLASH-память<a class="headerlink" href="#id11" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Запишите 32-битные данные для программирования в регистры <code class="docutils literal notranslate"><span class="pre">E2PD0–E2PD3</span></code>.</p></li>
+<li><p>Установите в <code class="docutils literal notranslate"><span class="pre">EEAR</span></code> целевой адрес. Адрес должен быть <strong>выровнен по границе 4 байт</strong>.</p></li>
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EEPM[3:0]</span></code> = <code class="docutils literal notranslate"><span class="pre">1X10</span></code>, где бит <code class="docutils literal notranslate"><span class="pre">EEPM[2]</span></code> может быть <code class="docutils literal notranslate"><span class="pre">0</span></code> или <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EEMPE</span></code> = <code class="docutils literal notranslate"><span class="pre">1</span></code>, при этом <code class="docutils literal notranslate"><span class="pre">EEPE</span></code> = <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p>В течение четырёх тактов установите <code class="docutils literal notranslate"><span class="pre">EEPE</span></code> = <code class="docutils literal notranslate"><span class="pre">1</span></code> для запуска процесса программирования FLASH-памяти.</p></li>
+</ul>
+</section>
+<section id="id12">
+<h4>Доступ к эмулируемому пространству E2PROM через интерфейс E2PCTL<a class="headerlink" href="#id12" title="Link to this heading"></a></h4>
+<p>Контроллер <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> осуществляет доступ к пространству данных FLASH-памяти через логику эмуляции интерфейса <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code>. Эмуляция <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> поддерживает чтение и запись с шириной данных 8, 16 и 32 бита. 8-битный байтовый режим обеспечивает лучшую совместимость с интерфейсом <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code>.</p>
+<p>32-битный режим повышает эффективность хранения и увеличивает срок службы FLASH-памяти, поэтому он рекомендуется как предпочтительный режим чтения/записи. Интерфейс эмуляции <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> поддерживает режим непрерывного чтения/записи, что даёт значительные преимущества в приложениях, где требуется однократно обновлять несколько последовательных адресов.</p>
+<p>Для LGT8F88P/168P данные FLASH-памяти представляют собой отдельное независимое пространство памяти. Настраивать и включать пространство данных FLASH через регистр <code class="docutils literal notranslate"><span class="pre">ECCR</span></code> не требуется. LGT8F328P не имеет отдельного пространства данных FLASH-памяти, данные FLASH и программная FLASH разделяют общее пространство объёмом 32 КБ. В этом случае необходимо включить функцию разделения данных FLASH через регистр <code class="docutils literal notranslate"><span class="pre">ECCR</span></code> и с помощью битов <code class="docutils literal notranslate"><span class="pre">ECS[1:0]</span></code> регистра <code class="docutils literal notranslate"><span class="pre">ECCR</span></code> настроить размер пространства данных FLASH. После применения конфигурации все остальные методы использования аналогичны LGT8F88P/168P.</p>
+<p>При реализации интерфейса <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> контроллер FLASH внутренне реализует логику автоматического стирания данных FLASH при необходимости, поэтому команда стирания EEPROM является опциональной и используется только тогда, когда пользователю требуется выполнить стирание отдельно.</p>
+<p>Регистр <code class="docutils literal notranslate"><span class="pre">EECR</span></code> управляет временем стирания/записи FLASH как для программной FLASH, так и для <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code>. Конкретный тип операции задаётся через биты <code class="docutils literal notranslate"><span class="pre">EEPME</span></code> и <code class="docutils literal notranslate"><span class="pre">EEPM[3:0]</span></code> регистра <code class="docutils literal notranslate"><span class="pre">EECR</span></code>. Чтение <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> выполняется достаточно просто: после установки целевого адреса и режима запись бита <code class="docutils literal notranslate"><span class="pre">EERE</span></code> считывает 32-битные данные по целевому адресу во внутренний буфер контроллера FLASH, после чего пользователь может прочитать интересующий байт через регистр <code class="docutils literal notranslate"><span class="pre">EEDR</span></code>. Контроллер FLASH не реализует операцию чтения программного FLASH-пространства, пользователь может удобно использовать инструкцию <code class="docutils literal notranslate"><span class="pre">LPM</span></code> или читать программную FLASH через её отображение в едином пространстве данных с помощью инструкций <code class="docutils literal notranslate"><span class="pre">LD/LDD/LDS</span></code>.</p>
+<ol class="arabic">
+<li><p><strong>8-битный режим, программирование E2PROM</strong></p>
+<ul class="simple">
+<li><p>Установите целевой адрес в регистры <code class="docutils literal notranslate"><span class="pre">EEARH/L</span></code>.</p></li>
+<li><p>Запишите новые данные в регистр <code class="docutils literal notranslate"><span class="pre">EEDR</span></code>.</p></li>
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EEPM[3:1]</span></code> = <code class="docutils literal notranslate"><span class="pre">000</span></code>, <code class="docutils literal notranslate"><span class="pre">EEPM[0]</span></code> может быть <code class="docutils literal notranslate"><span class="pre">0</span></code> или <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EEMPE</span></code> = <code class="docutils literal notranslate"><span class="pre">1</span></code>, при этом <code class="docutils literal notranslate"><span class="pre">EEPE</span></code> = <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p>В течение четырёх тактов установите <code class="docutils literal notranslate"><span class="pre">EEPE</span></code> = <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+<p>После выполнения настроек контроллер запустит операцию программирования. Во время программирования ЦП останется на текущем адресе инструкции и продолжит работу только после завершения операции. Если в процессе программирования потребуется стереть данные, контроллер автоматически запустит процедуру стирания.</p>
+</li>
+<li><p><strong>32-битный режим, программирование E2PROM</strong></p>
+<ul class="simple">
+<li><p>Загрузите 32-битные данные через регистры <code class="docutils literal notranslate"><span class="pre">E2PD0–E2PD3</span></code>.</p></li>
+<li><p>Установите целевой адрес в регистры <code class="docutils literal notranslate"><span class="pre">EEARH/L</span></code>. Обратите внимание: это байтовый адрес, но контроллер использует <code class="docutils literal notranslate"><span class="pre">EEAR[15:2]</span></code> как адрес доступа к FLASH-памяти.</p></li>
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EEPM[3:1]</span></code> = <code class="docutils literal notranslate"><span class="pre">010</span></code>, <code class="docutils literal notranslate"><span class="pre">EEPM[0]</span></code> может быть <code class="docutils literal notranslate"><span class="pre">0</span></code> или <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EEMPE</span></code> = <code class="docutils literal notranslate"><span class="pre">1</span></code>, при этом <code class="docutils literal notranslate"><span class="pre">EEPE</span></code> = <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p>В течение четырёх тактов установите <code class="docutils literal notranslate"><span class="pre">EEPE</span></code> = <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>8-битный режим, чтение E2PROM</strong></p>
+<ul class="simple">
+<li><p>Установите целевой адрес в регистры <code class="docutils literal notranslate"><span class="pre">EEARH/L</span></code>.</p></li>
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EEPM[3:1]</span></code> = <code class="docutils literal notranslate"><span class="pre">000</span></code>.</p></li>
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EERE</span></code> = <code class="docutils literal notranslate"><span class="pre">1</span></code> для запуска операции чтения <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code>.</p></li>
+<li><p>Подождите 2 такта (выполните две инструкции <code class="docutils literal notranslate"><span class="pre">NOP</span></code>).</p></li>
+<li><p>Данные по целевому адресу будут переданы в регистр <code class="docutils literal notranslate"><span class="pre">EEDR</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>32-битный режим, чтение E2PROM</strong></p>
+<ul class="simple">
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EEARH/L</span></code> в целевой адрес. Адрес должен быть <strong>выровнен по границе 4 байт</strong>.</p></li>
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EEPM[3:1]</span></code> = <code class="docutils literal notranslate"><span class="pre">010</span></code> для включения 32-битного интерфейса.</p></li>
+<li><p>Установите <code class="docutils literal notranslate"><span class="pre">EERE</span></code> = <code class="docutils literal notranslate"><span class="pre">1</span></code> для запуска операции чтения <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code>.</p></li>
+<li><p>Подождите 2 такта системной частоты (выполните две инструкции <code class="docutils literal notranslate"><span class="pre">NOP</span></code>).</p></li>
+</ul>
+</li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> при доступе к эмулируемому пространству <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> поддерживает режим непрерывного программирования. Этот режим очень эффективен для приложений, где требуется однократно обновить блок данных, а также способствует увеличению срока службы FLASH-памяти. Режим непрерывного доступа поддерживает только операции программирования данных с <strong>32-битной</strong> шириной.</p>
+<p>Режим непрерывного доступа включается битом <code class="docutils literal notranslate"><span class="pre">SWM</span></code> регистра <code class="docutils literal notranslate"><span class="pre">ECCR</span></code>. После установки <code class="docutils literal notranslate"><span class="pre">SWM</span></code> все последующие операции записи в эмулируемое пространство <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> через <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> выполняются в режиме непрерывного программирования. В этом режиме контроллер <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> автоматически обрабатывает переключение страниц в зависимости от состояния данных по целевому адресу. Однако если во время непрерывного программирования происходит переключение страницы, контроллер в процессе непрерывного программирования <strong>не будет</strong> автоматически выполнять обмен данными областей <code class="docutils literal notranslate"><span class="pre">CP0/CP1</span></code> и <strong>не будет</strong> обновлять информацию о странице.</p>
+<p>Перед выполнением последней операции в серии непрерывного программирования необходимо сбросить бит <code class="docutils literal notranslate"><span class="pre">SWM</span></code> (записать <code class="docutils literal notranslate"><span class="pre">0</span></code>), чтобы выключить режим непрерывного программирования, а затем запустить последнюю операцию программирования уже в обычном (не непрерывном) режиме. После завершения программирования <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> автоматически скопирует данные областей <code class="docutils literal notranslate"><span class="pre">CP0/CP1</span></code> на страницу обмена и обновит информацию на странице обмена, сделав её текущей активной страницей. Таким образом завершается вся операция непрерывного программирования.</p>
+<ol class="arabic simple" start="5">
+<li><p>Порядок работы в режиме непрерывного программирования:</p>
+<ol class="arabic simple">
+<li><p>Настройте размер пространства данных FLASH через регистр <code class="docutils literal notranslate"><span class="pre">ECCR</span></code> и установите бит <code class="docutils literal notranslate"><span class="pre">SWM</span></code>.</p></li>
+<li><p>Выполните программирование эмулируемой области <code class="docutils literal notranslate"><span class="pre">E2PROM</span></code> в 32-битном режиме.</p></li>
+<li><p>Если это не последняя операция, вернитесь к шагу 2 для программирования следующих данных.</p></li>
+<li><p>Если достигнута последняя операция программирования, сначала сбросьте бит <code class="docutils literal notranslate"><span class="pre">SWM</span></code>, чтобы выключить режим непрерывного программирования, а затем выполните последнюю операцию программирования, следуя процедуре из шага 2.</p></li>
+</ol>
+</li>
+</ol>
+</section>
+<section id="id13">
+<h4>Эффективное управление FLASH-памятью через E2PCTL<a class="headerlink" href="#id13" title="Link to this heading"></a></h4>
+<p>Помимо реализации режима непрерывного программирования, контроллер <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> также позволяет независимо управлять копированием данных при страничном обмене с помощью битов <code class="docutils literal notranslate"><span class="pre">CP0/CP1</span></code> регистра <code class="docutils literal notranslate"><span class="pre">ECCR</span></code>. Биты <code class="docutils literal notranslate"><span class="pre">CP0</span></code> и <code class="docutils literal notranslate"><span class="pre">CP1</span></code> регистра <code class="docutils literal notranslate"><span class="pre">ECCR</span></code> используются для управления операцией обмена данными в областях <code class="docutils literal notranslate"><span class="pre">CP0</span></code> и <code class="docutils literal notranslate"><span class="pre">CP1</span></code> текущей страницы в процессе страничного обмена. Если сбросить бит <code class="docutils literal notranslate"><span class="pre">CP0</span></code> или <code class="docutils literal notranslate"><span class="pre">CP1</span></code> (записать <code class="docutils literal notranslate"><span class="pre">0</span></code>), то при страничном обмене соответствующая область данных текущей страницы обмениваться <strong>не будет</strong>. В данном разделе предлагается эффективный метод управления, использующий эту особенность.</p>
+<p>В процессе обновления данных во FLASH-памяти наиболее трудоёмкой операцией является стирание страницы обмена. Поэтому можно разработать метод управления данными, который минимизирует количество стираний страниц, что позволит как повысить эффективность программирования, так и уменьшить износ FLASH-памяти.</p>
+<p>Ниже предлагается эталонный алгоритм, подходящий для приложений, управляющих данными блоками:</p>
+<ol class="arabic simple">
+<li><p>Предполагается, что пользовательские данные представляют собой один полный блок данных, размер которого кратен <strong>4 байтам</strong>.</p></li>
+<li><p>Каждое обновление данных перезаписывает полный блок данных целиком.</p></li>
+<li><p>Информация блока данных помимо пользовательских данных также содержит служебную информацию управления блоком.</p></li>
+</ol>
+<p>При соблюдении этих трёх условий можно в полной мере использовать режим непрерывного программирования и механизм автоматического страничного обмена <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> для реализации высокоэффективного метода управления данными.</p>
+<p>Поскольку каждое обновление перезаписывает блок данных одинакового размера, а структура каждого блока содержит адрес следующего блока данных, при каждом обновлении данные можно программировать последовательно по адресам без необходимости копировать области <code class="docutils literal notranslate"><span class="pre">CP0/CP1</span></code>. Более того, поскольку каждое обновление записывает данные в уже стёртую область, стирание страницы не требуется.</p>
+<p>Когда будет записан последний блок, его структурная информация будет указывать на следующий блок данных, возвращаясь к начальному адресу страницы. После этого при следующей операции записи данных <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> инициирует процесс стирания страницы и обновит текущую активную страницу.</p>
+</section>
+<section id="id14">
+<h4>Меры защиты операций с FLASH-памятью<a class="headerlink" href="#id14" title="Link to this heading"></a></h4>
+<p>Если напряжение питания VCC слишком низкое, операции стирания/записи FLASH-памяти могут выполняться с ошибками из-за недостаточного напряжения.</p>
+<p>Ошибки при стирании/записи FLASH-памяти при низком напряжении могут быть вызваны двумя причинами. Во-первых, для нормальной операции стирания/записи требуется минимальное рабочее напряжение, при напряжении ниже этого уровня операция не выполнится, что приведёт к повреждению данных. Во-вторых, для работы ядра на определённой частоте также требуется минимальное напряжение, при его снижении возможны ошибки выполнения инструкций, что, в свою очередь, вызовет сбои при операциях с FLASH-памятью.</p>
+<p>Избежать подобных проблем можно следующим простым способом:</p>
+<p>Перевести систему в состояние сброса при низком напряжении питания. Это можно реализовать с помощью встроенной схемы детектора низкого напряжения (VDT). Если VDT обнаруживает, что текущее рабочее напряжение ниже установленного порога, он выдаёт сигнал сброса. Если порогов VDT недостаточно для конкретного применения, можно рассмотреть возможность добавления внешней цепи сброса.</p>
+</section>
+</section>
+</section>
+<section id="id15">
+<h2>Описание регистров<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<section id="eear">
+<h3>EEAR - Регистр адреса<a class="headerlink" href="#eear" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Адрес</p></th>
+<th class="head"><p>Значение по умолчанию</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>EEARH: 0x22 (0x42)</p></td>
+<td><p>Значение по умолчанию: 0x00</p></td>
+</tr>
+<tr class="row-odd"><td><p>EEARL: 0x21 (0x41)</p></td>
+<td><p>Значение по умолчанию: 0x00</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id16">
+<h4>Описание битов<a class="headerlink" href="#id16" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>15</p></td>
+<td><p></p></td>
+<td><p>Зарезервирован, не используется.</p></td>
+</tr>
+<tr class="row-odd"><td><p>14:8</p></td>
+<td><p>EEARH</p></td>
+<td><p>Старшие 7 бит адреса доступа к FLASH/E2PROM.</p></td>
+</tr>
+<tr class="row-even"><td><p>7:0</p></td>
+<td><p>EEARL</p></td>
+<td><p>Младшие 8 бит адреса доступа к FLASH/E2PROM.</p></td>
+</tr>
+</tbody>
+</table>
+<p>При использовании контроллера <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> для доступа к FLASH-памяти биты <code class="docutils literal notranslate"><span class="pre">EEAR[14:2]</span></code> используются для доступа ко всему программному пространству с выравниванием по <strong>4 байта</strong>. Биты <code class="docutils literal notranslate"><span class="pre">EEAR[1:0]</span></code> используются только при доступе к регистру данных <code class="docutils literal notranslate"><span class="pre">EEDR</span></code>. Подробнее см. в описании <a class="reference internal" href="#"><span class="xref myst">регистра данных EEDR</span></a> ниже. Контроллер <code class="docutils literal notranslate"><span class="pre">E2PCTL</span></code> поддерживает 8/16/32-битные режимы, однако в любом из этих режимов адресация в <code class="docutils literal notranslate"><span class="pre">EEAR</span></code> всегда байтовая.</p>
+</section>
+</section>
+<section id="eedr-e2pd0-0">
+<h3>EEDR/E2PD0 - Регистр данных 0<a class="headerlink" href="#eedr-e2pd0-0" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Адрес: 0x20 (0x40)</p></th>
+<th class="head"><p>Значение по умолчанию: 0x00</p></th>
+</tr>
+</thead>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>7:0</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Имя</p></td>
+<td><p>EEDR/E2PD0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Доступ</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td><p>Начальное значение</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id17">
+<h4>Описание битов<a class="headerlink" href="#id17" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7:0</p></td>
+<td><p>EEDR<br>E2PD0</p></td>
+<td><p>В 16/32-битном режиме используется<br>для хранения младшего байта</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="e2pd1-1">
+<h3>E2PD1 - Регистр данных 1<a class="headerlink" href="#e2pd1-1" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Адрес: 0x5A</p></th>
+<th class="head"><p>Значение по умолчанию: 0x00</p></th>
+</tr>
+</thead>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>7:0</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Имя</p></td>
+<td><p>E2PD1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Доступ</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td><p>Начальное значение</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id18">
+<h4>Описание битов<a class="headerlink" href="#id18" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7:0</p></td>
+<td><p>E2PD1</p></td>
+<td><p>В 16-битном режиме: хранит старшие 8 бит 16-битных данных.<br>В 32-битном режиме: хранит старшие 8 бит младших 16 бит данных.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="e2pd2-2">
+<h3>E2PD2 - Регистр данных 2<a class="headerlink" href="#e2pd2-2" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Адрес: 0x57</p></th>
+<th class="head"><p>Значение по умолчанию: 0x00</p></th>
+</tr>
+</thead>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>7:0</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Имя</p></td>
+<td><p>E2PD2</p></td>
+</tr>
+<tr class="row-odd"><td><p>Доступ</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td><p>Начальное значение</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id19">
+<h4>Описание битов<a class="headerlink" href="#id19" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7:0</p></td>
+<td><p>E2PD2</p></td>
+<td><p>В 32-битном режиме: хранит младшие 8 бит<br>старших 16 бит данных.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="e2pd3-3">
+<h3>E2PD3 - Регистр данных 3<a class="headerlink" href="#e2pd3-3" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Адрес: 0x5C</p></th>
+<th class="head"><p>Значение по умолчанию: 0x00</p></th>
+</tr>
+</thead>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>7:0</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Имя</p></td>
+<td><p>E2PD3</p></td>
+</tr>
+<tr class="row-odd"><td><p>Доступ</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td><p>Начальное значение</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id20">
+<h4>Описание битов<a class="headerlink" href="#id20" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7:0</p></td>
+<td><p>E2PD3</p></td>
+<td><p>В 32-битном режиме: хранит старшие 8 бит<br>старших 16 бит данных.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="eccr">
+<h3>ECCR - Регистр управления<a class="headerlink" href="#eccr" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Адрес: 0x36 (0x56)</p></th>
+<th class="head"><p>Значение по умолчанию: 0x0C</p></th>
+</tr>
+</thead>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>7</p></th>
+<th class="head"><p>6</p></th>
+<th class="head"><p>5</p></th>
+<th class="head"><p>4</p></th>
+<th class="head"><p>3</p></th>
+<th class="head"><p>2</p></th>
+<th class="head"><p>1</p></th>
+<th class="head"><p>0</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Имя</p></td>
+<td><p>WEN</p></td>
+<td><p>EEN</p></td>
+<td><p>ERN</p></td>
+<td><p>SWM</p></td>
+<td><p>CP1</p></td>
+<td><p>CP0</p></td>
+<td><p>ECS1</p></td>
+<td><p>ECS0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Доступ</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td><p>Начальное<br>значение</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id21">
+<h4>Описание битов<a class="headerlink" href="#id21" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>WEN</p></td>
+<td><p>Защита записи <code class="docutils literal notranslate"><span class="pre">ECCR</span></code>.<br>Перед изменением <code class="docutils literal notranslate"><span class="pre">ECCR</span></code> необходимо сначала<br>записать <code class="docutils literal notranslate"><span class="pre">1</span></code> в <code class="docutils literal notranslate"><span class="pre">WEN</span></code>, а затем обновить содержимое<br>регистра <code class="docutils literal notranslate"><span class="pre">ECCR</span></code> в течение 6 системных тактов.</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>EEN</p></td>
+<td><p>Разрешение E2PROM (<strong>только для LGT8F328P</strong>)<br><code class="docutils literal notranslate"><span class="pre">1</span></code>: Включена эмуляция E2PROM, часть пространства<br>32 КБ FLASH будет зарезервирована.<br><code class="docutils literal notranslate"><span class="pre">0</span></code>: Эмуляция E2PROM отключена, все 32 КБ FLASH<br>используются только для программного пространства.</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>ERN</p></td>
+<td><p>Запись 1 сбрасывает контроллер E2PCTL.</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>SWM</p></td>
+<td><p>Режим непрерывной записи (действует при операциях<br>с эмулируемым контроллером E2PROM).</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>CP1</p></td>
+<td><p>Управление разрешением обмена областью<br><code class="docutils literal notranslate"><span class="pre">CP1</span></code> при страничном обмене.</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>CP0</p></td>
+<td><p>Управление разрешением обмена областью<br><code class="docutils literal notranslate"><span class="pre">CP0</span></code> при страничном обмене.</p></td>
+</tr>
+<tr class="row-even"><td><p>1:0</p></td>
+<td><p>ECS[1:0]</p></td>
+<td><p>Конфигурация размера E2PROM.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>ECS[1:0]</p></th>
+<th class="head"><p>E2PROM</p></th>
+<th class="head"><p>FLASH-память</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>00</p></td>
+<td><p>1 КБ</p></td>
+<td><p>30 КБ</p></td>
+</tr>
+<tr class="row-odd"><td><p>01</p></td>
+<td><p>2 КБ</p></td>
+<td><p>28 КБ</p></td>
+</tr>
+<tr class="row-even"><td><p>10</p></td>
+<td><p>4 КБ</p></td>
+<td><p>24 КБ</p></td>
+</tr>
+<tr class="row-odd"><td><p>11</p></td>
+<td><p>8 КБ</p></td>
+<td><p>16 КБ</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="eecr">
+<h3>EECR - Регистр управления доступом<a class="headerlink" href="#eecr" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Адрес: 0x1F (0x3F)</p></th>
+<th class="head"><p>Значение по умолчанию: 0x00</p></th>
+</tr>
+</thead>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>7</p></th>
+<th class="head"><p>6</p></th>
+<th class="head"><p>5</p></th>
+<th class="head"><p>4</p></th>
+<th class="head"><p>3</p></th>
+<th class="head"><p>2</p></th>
+<th class="head"><p>1</p></th>
+<th class="head"><p>0</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Имя</p></td>
+<td><p>EEPM3</p></td>
+<td><p>EEPM2</p></td>
+<td><p>EEPM1</p></td>
+<td><p>EEPM0</p></td>
+<td><p>EERIE</p></td>
+<td><p>EEMPE</p></td>
+<td><p>EEPE</p></td>
+<td><p>EERE</p></td>
+</tr>
+<tr class="row-odd"><td><p>Доступ</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td><p>Начальное<br>значение</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id22">
+<h4>Описание битов<a class="headerlink" href="#id22" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7:4</p></td>
+<td><p>EEPM[3:0]</p></td>
+<td><p>Биты управления режимом доступа к EFLASH/E2PROM</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>EERIE</p></td>
+<td><p>Управление прерыванием готовности FLASH/E2PROM.<br><code class="docutils literal notranslate"><span class="pre">1</span></code>: разрешено,<br><code class="docutils literal notranslate"><span class="pre">0</span></code>: запрещено.<br>Прерывание готовности E2PROM возникает после того, как бит EEPE<br>аппаратно сброшен в <code class="docutils literal notranslate"><span class="pre">0</span></code>. Во время операций с EPROM (программной FLASH)<br>это прерывание не генерируется.</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>EEMPE</p></td>
+<td><p>Бит разрешения операции программирования FLASH/E2PROM.<br>Используется для управления тем, активен ли бит EEPE.<br>Если установить EEMPE=<code class="docutils literal notranslate"><span class="pre">1</span></code> (при EEPE=<code class="docutils literal notranslate"><span class="pre">0</span></code>), то в течение следующих<br>четырёх тактов установка EEPE=<code class="docutils literal notranslate"><span class="pre">1</span></code> запустит операцию программирования.<br>В противном случае операция программирования не будет выполнена.<br>Через четыре такта EEMPE автоматически сбрасывается в <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>EEPE</p></td>
+<td><p>Бит разрешения операции программирования FLASH/E2PROM<br>(непосредственный запуск).</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>EERE</p></td>
+<td><p>Бит разрешения чтения E2PROM.<br>Данные становятся действительными через два<br>системных такта после установки этого бита.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>EEPM[3:0]</p></th>
+<th class="head"><p>[3]</p></th>
+<th class="head"><p>[2]</p></th>
+<th class="head"><p>[1]</p></th>
+<th class="head"><p>[0]</p></th>
+<th class="head"><p>Описание режима</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0 0 0 x</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>x</p></td>
+<td><p>8-битный режим чтения/записи E2PROM<br>(по умолчанию)</p></td>
+</tr>
+<tr class="row-odd"><td><p>0 0 1 x</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>x</p></td>
+<td><p>16-битный режим чтения/записи E2PROM</p></td>
+</tr>
+<tr class="row-even"><td><p>0 1 0 x</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>x</p></td>
+<td><p>32-битный режим чтения/записи E2PROM</p></td>
+</tr>
+<tr class="row-odd"><td><p>1 x 0 0</p></td>
+<td><p>1</p></td>
+<td><p>x</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>Стирание E2PROM (опционально)</p></td>
+</tr>
+<tr class="row-even"><td><p>1 x 0 1</p></td>
+<td><p>1</p></td>
+<td><p>x</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>Стирание страницы программной FLASH</p></td>
+</tr>
+<tr class="row-odd"><td><p>1 x 1 0</p></td>
+<td><p>1</p></td>
+<td><p>x</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>Программирование (запись) программной FLASH</p></td>
+</tr>
+<tr class="row-even"><td><p>1 x 1 1</p></td>
+<td><p>1</p></td>
+<td><p>x</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>Сброс контроллера FLASH/E2PROM</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p><strong>Примечание:</strong> ‘x’ означает, что бит может быть как 0, так и 1 (не влияет на режим).</p>
+</div></blockquote>
+</section>
+</section>
+<section id="gpior2-2">
+<h3>GPIOR2 - Регистр ввода-вывода 2<a class="headerlink" href="#gpior2-2" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Адрес: 0x2B (0x4B)</p></th>
+<th class="head"><p>Значение по умолчанию: 0x00</p></th>
+</tr>
+</thead>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>7:0</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Имя</p></td>
+<td><p>GPIOR2</p></td>
+</tr>
+<tr class="row-odd"><td><p>Доступ</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td><p>Начальное значение</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id23">
+<h4>Описание битов<a class="headerlink" href="#id23" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7:0</p></td>
+<td><p>GPIOR2</p></td>
+<td><p>Регистр ввода-вывода общего назначения 2,<br>предназначен для хранения пользовательских данных.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="gpior1-1">
+<h3>GPIOR1 - Регистр ввода-вывода 1<a class="headerlink" href="#gpior1-1" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Адрес: 0x2A (0x4A)</p></th>
+<th class="head"><p>Значение по умолчанию: 0x00</p></th>
+</tr>
+</thead>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>7:0</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Имя</p></td>
+<td><p>GPIOR1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Доступ</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td><p>Начальное значение</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id24">
+<h4>Описание битов<a class="headerlink" href="#id24" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7:0</p></td>
+<td><p>GPIOR1</p></td>
+<td><p>Регистр ввода-вывода общего назначения 1,<br>предназначен для хранения пользовательских данных.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="gpior0-0">
+<h3>GPIOR0 - Регистр ввода-вывода 0<a class="headerlink" href="#gpior0-0" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Адрес: 0x1E (0x3E)</p></th>
+<th class="head"><p>Значение по умолчанию: 0x00</p></th>
+</tr>
+</thead>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>7:0</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Имя</p></td>
+<td><p>GPIOR0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Доступ</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td><p>Начальное значение</p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id25">
+<h4>Описание битов<a class="headerlink" href="#id25" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Имя</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>7:0</p></td>
+<td><p>GPIOR0</p></td>
+<td><p>Регистр ввода-вывода общего назначения 0,<br>предназначен для хранения пользовательских данных.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core.html" class="btn btn-neutral float-left" title="Ядро" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="clk.html" class="btn btn-neutral float-right" title="Система тактирования" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright b-oleg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

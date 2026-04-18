@@ -1,0 +1,639 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Прерывания &mdash; LGT8FXP 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Внешние прерывания" href="external-interrupts.html" />
+    <link rel="prev" title="Ускоритель вычислений" href="udsc.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            LGT8FXP
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Описание</a></li>
+<li class="toctree-l1"><a class="reference internal" href="core.html">Ядро</a></li>
+<li class="toctree-l1"><a class="reference internal" href="memory.html">Память</a></li>
+<li class="toctree-l1"><a class="reference internal" href="clk.html">Система тактирования</a></li>
+<li class="toctree-l1"><a class="reference internal" href="udsc.html">Ускоритель вычислений</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Прерывания</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Вектора прерываний</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lgt8f88p">Список векторов прерываний LGT8F88P</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lgt8f168p-328p">Список векторов прерываний LGT8F168P/328P</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">Обработка векторов прерываний</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">Описание регистров</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mcucr">MCUCR - Регистр управления</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Описание битов</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ivbase">IVBASE - Регистр базового адреса векторов прерываний</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Описание битов</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="external-interrupts.html">Внешние прерывания</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dac.html">Цифро-аналоговый преобразователь (ЦАП)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adc.html">Аналого-цифровой преобразователь (АЦП)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="registers.html">Карта регистров</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">LGT8FXP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Прерывания</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/interrupts.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>Прерывания<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>В этом разделе описываются особенности обработки прерываний в
+микроконтроллерах LGT8F88P/168P/328P.</p>
+<section id="id2">
+<h2>Вектора прерываний<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>В микроконтроллерах LGT8F88P/168P/328P имеется 30 источников прерываний и есть возможность переноса начального адреса таблицы векторов прерываний. Каждый вектор прерывания занимает одно командное слово в LGT8F88P и два командных слова в LGT8F168P/328P.</p>
+<section id="lgt8f88p">
+<h3>Список векторов прерываний LGT8F88P<a class="headerlink" href="#lgt8f88p" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>№</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Источник</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0x0000</p></td>
+<td><p>RESET</p></td>
+<td><p>Внешний сброс, сброс при включении питания, сброс сторожевого таймера, отладка SWD, сброс по низкому напряжению</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>0x0001</p></td>
+<td><p>INT0</p></td>
+<td><p>Внешнее прерывание 0</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>0x0002</p></td>
+<td><p>INT1</p></td>
+<td><p>Внешнее прерывание 1</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>0x0003</p></td>
+<td><p>PCI0</p></td>
+<td><p>Прерывание по уровню на выводе 0</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>0x0004</p></td>
+<td><p>PCI1</p></td>
+<td><p>Прерывание по уровню на выводе 1</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>0x0005</p></td>
+<td><p>PCI2</p></td>
+<td><p>Прерывание по уровню на выводе 2</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>0x0006</p></td>
+<td><p>WDT</p></td>
+<td><p>Прерывание по переполнению сторожевого таймера</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>0x0007</p></td>
+<td><p>TC2 COMPA</p></td>
+<td><p>Прерывание таймера 2 по совпадению A</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>0x0008</p></td>
+<td><p>TC2 COMPB</p></td>
+<td><p>Прерывание таймера 2 по совпадению B</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>0x0009</p></td>
+<td><p>TC2 OVF</p></td>
+<td><p>Прерывание таймера 2 по переполнению</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p>0x000A</p></td>
+<td><p>TC1 CAPT</p></td>
+<td><p>Прерывание таймера 1 по захвату</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>0x000B</p></td>
+<td><p>TC1 COMPA</p></td>
+<td><p>Прерывание таймера 1 по совпадению A</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p>0x000C</p></td>
+<td><p>TC1 COMPB</p></td>
+<td><p>Прерывание таймера 1 по совпадению B</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p>0x000D</p></td>
+<td><p>TC1 OVF</p></td>
+<td><p>Прерывание таймера 1 по переполнению</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>0x000E</p></td>
+<td><p>TC0 COMPA</p></td>
+<td><p>Прерывание таймера 0 по совпадению A</p></td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>0x000F</p></td>
+<td><p>TC0 COMPB</p></td>
+<td><p>Прерывание таймера 0 по совпадению B</p></td>
+</tr>
+<tr class="row-even"><td><p>17</p></td>
+<td><p>0x0010</p></td>
+<td><p>TC0 OVF</p></td>
+<td><p>Прерывание таймера 0 по переполнению</p></td>
+</tr>
+<tr class="row-odd"><td><p>18</p></td>
+<td><p>0x0011</p></td>
+<td><p>SPI STC</p></td>
+<td><p>Прерывание по завершению последовательной передачи SPI</p></td>
+</tr>
+<tr class="row-even"><td><p>19</p></td>
+<td><p>0x0012</p></td>
+<td><p>USART RXC</p></td>
+<td><p>Прерывание по завершению приёма USART</p></td>
+</tr>
+<tr class="row-odd"><td><p>20</p></td>
+<td><p>0x0013</p></td>
+<td><p>USART UDRE</p></td>
+<td><p>Прерывание по пустому регистру данных USART</p></td>
+</tr>
+<tr class="row-even"><td><p>21</p></td>
+<td><p>0x0014</p></td>
+<td><p>USART TXC</p></td>
+<td><p>Прерывание по завершению передачи USART</p></td>
+</tr>
+<tr class="row-odd"><td><p>22</p></td>
+<td><p>0x0015</p></td>
+<td><p>ADC</p></td>
+<td><p>Прерывание по завершению преобразования АЦП</p></td>
+</tr>
+<tr class="row-even"><td><p>23</p></td>
+<td><p>0x0016</p></td>
+<td><p>EE_RDY</p></td>
+<td><p>Прерывание по готовности EEPROM</p></td>
+</tr>
+<tr class="row-odd"><td><p>24</p></td>
+<td><p>0x0017</p></td>
+<td><p>ANA_COMP</p></td>
+<td><p>Прерывание аналогового компаратора 0</p></td>
+</tr>
+<tr class="row-even"><td><p>25</p></td>
+<td><p>0x0018</p></td>
+<td><p>TWI</p></td>
+<td><p>Прерывание двухпроводного последовательного интерфейса</p></td>
+</tr>
+<tr class="row-odd"><td><p>26</p></td>
+<td><p>0x0019</p></td>
+<td><p>ANA_COMP1</p></td>
+<td><p>Прерывание аналогового компаратора 1</p></td>
+</tr>
+<tr class="row-even"><td><p>27</p></td>
+<td><p>0x001A</p></td>
+<td><p>—</p></td>
+<td><p>Зарезервировано</p></td>
+</tr>
+<tr class="row-odd"><td><p>28</p></td>
+<td><p>0x001B</p></td>
+<td><p>PCI3</p></td>
+<td><p>Прерывание по уровню на выводе 3</p></td>
+</tr>
+<tr class="row-even"><td><p>29</p></td>
+<td><p>0x001C</p></td>
+<td><p>PCI4</p></td>
+<td><p>Прерывание по уровню на выводе 4</p></td>
+</tr>
+<tr class="row-odd"><td><p>30</p></td>
+<td><p>0x001D</p></td>
+<td><p>TC3_INT</p></td>
+<td><p>Прерывание таймера 3</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="lgt8f168p-328p">
+<h3>Список векторов прерываний LGT8F168P/328P<a class="headerlink" href="#lgt8f168p-328p" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>№</p></th>
+<th class="head"><p>Адрес</p></th>
+<th class="head"><p>Источник</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0x0000</p></td>
+<td><p>RESET</p></td>
+<td><p>Внешний сброс, сброс при включении питания, сброс сторожевого таймера, отладка SWD, сброс по низкому напряжению</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>0x0002</p></td>
+<td><p>INT0</p></td>
+<td><p>Внешнее прерывание 0</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>0x0004</p></td>
+<td><p>INT1</p></td>
+<td><p>Внешнее прерывание 1</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>0x0006</p></td>
+<td><p>PCI0</p></td>
+<td><p>Прерывание по уровню на выводе 0</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>0x0008</p></td>
+<td><p>PCI1</p></td>
+<td><p>Прерывание по уровню на выводе 1</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>0x000A</p></td>
+<td><p>PCI2</p></td>
+<td><p>Прерывание по уровню на выводе 2</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>0x000C</p></td>
+<td><p>WDT</p></td>
+<td><p>Прерывание по переполнению сторожевого таймера</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>0x000E</p></td>
+<td><p>TC2 COMPA</p></td>
+<td><p>Прерывание таймера 2 по совпадению A</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>0x0010</p></td>
+<td><p>TC2 COMPB</p></td>
+<td><p>Прерывание таймера 2 по совпадению B</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>0x0012</p></td>
+<td><p>TC2 OVF</p></td>
+<td><p>Прерывание таймера 2 по переполнению</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p>0x0014</p></td>
+<td><p>TC1 CAPT</p></td>
+<td><p>Прерывание таймера 1 по захвату</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>0x0016</p></td>
+<td><p>TC1 COMPA</p></td>
+<td><p>Прерывание таймера 1 по совпадению A</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p>0x0018</p></td>
+<td><p>TC1 COMPB</p></td>
+<td><p>Прерывание таймера 1 по совпадению B</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p>0x001A</p></td>
+<td><p>TC1 OVF</p></td>
+<td><p>Прерывание таймера 1 по переполнению</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>0x001C</p></td>
+<td><p>TC0 COMPA</p></td>
+<td><p>Прерывание таймера 0 по совпадению A</p></td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>0x001E</p></td>
+<td><p>TC0 COMPB</p></td>
+<td><p>Прерывание таймера 0 по совпадению B</p></td>
+</tr>
+<tr class="row-even"><td><p>17</p></td>
+<td><p>0x0020</p></td>
+<td><p>TC0 OVF</p></td>
+<td><p>Прерывание таймера 0 по переполнению</p></td>
+</tr>
+<tr class="row-odd"><td><p>18</p></td>
+<td><p>0x0022</p></td>
+<td><p>SPI STC</p></td>
+<td><p>Прерывание по завершению последовательной передачи SPI</p></td>
+</tr>
+<tr class="row-even"><td><p>19</p></td>
+<td><p>0x0024</p></td>
+<td><p>USART RXC</p></td>
+<td><p>Прерывание по завершению приёма USART</p></td>
+</tr>
+<tr class="row-odd"><td><p>20</p></td>
+<td><p>0x0026</p></td>
+<td><p>USART UDRE</p></td>
+<td><p>Прерывание по пустому регистру данных USART</p></td>
+</tr>
+<tr class="row-even"><td><p>21</p></td>
+<td><p>0x0028</p></td>
+<td><p>USART TXC</p></td>
+<td><p>Прерывание по завершению передачи USART</p></td>
+</tr>
+<tr class="row-odd"><td><p>22</p></td>
+<td><p>0x002A</p></td>
+<td><p>ADC</p></td>
+<td><p>Прерывание по завершению преобразования АЦП</p></td>
+</tr>
+<tr class="row-even"><td><p>23</p></td>
+<td><p>0x002C</p></td>
+<td><p>EE_RDY</p></td>
+<td><p>Прерывание по готовности EEPROM</p></td>
+</tr>
+<tr class="row-odd"><td><p>24</p></td>
+<td><p>0x002E</p></td>
+<td><p>ANA_COMP</p></td>
+<td><p>Прерывание аналогового компаратора</p></td>
+</tr>
+<tr class="row-even"><td><p>25</p></td>
+<td><p>0x0030</p></td>
+<td><p>TWI</p></td>
+<td><p>Прерывание двухпроводного последовательного интерфейса</p></td>
+</tr>
+<tr class="row-odd"><td><p>26</p></td>
+<td><p>0x0032</p></td>
+<td><p>ANA_COMP1</p></td>
+<td><p>Прерывание аналогового компаратора 1</p></td>
+</tr>
+<tr class="row-even"><td><p>27</p></td>
+<td><p>0x0034</p></td>
+<td><p>—</p></td>
+<td><p>Зарезервировано</p></td>
+</tr>
+<tr class="row-odd"><td><p>28</p></td>
+<td><p>0x0036</p></td>
+<td><p>PCI3</p></td>
+<td><p>Прерывание по уровню на выводе 3</p></td>
+</tr>
+<tr class="row-even"><td><p>29</p></td>
+<td><p>0x0038</p></td>
+<td><p>PCI4</p></td>
+<td><p>Прерывание по уровню на выводе 4</p></td>
+</tr>
+<tr class="row-odd"><td><p>30</p></td>
+<td><p>0x003A</p></td>
+<td><p>TC3_INT</p></td>
+<td><p>Прерывание таймера 3</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Примечание для LGT8FX8P:</strong><br />
+Вектор сброса (RESET) начинает выполнение с адреса <strong>0x0000</strong>.<br />
+Все остальные адреса векторов (кроме вектора сброса) могут быть перенаправлены на начальный адрес с выравниванием <strong>512 байт</strong> с помощью бита <strong>IVSEL</strong> в регистре MCUCR и регистра <strong>IVBASE</strong>.</p>
+</section>
+</section>
+<section id="id3">
+<h2>Обработка векторов прерываний<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>Типичная конфигурация программы для адресов вектора сброса и прерывания в <strong>LGT8F88P</strong> выглядит следующим образом:</p>
+<div class="highlight-assembly notranslate"><div class="highlight"><pre><span></span>0x000 RJMP RESET      ; Вектор сброса 
+0x001 RJMP EXT_INT0   ; Внешнее прерывание 0
+0x002 RJMP EXT_INT1   ; Внешнее прерывание 1
+0x003 RJMP PCINT0     ; Прерывание по изменению уровня 0
+0x004 RJMP PCINT1     ; Прерывание по изменению уровня 1
+0x005 RJMP PCINT2     ; Прерывание по изменению уровня 2
+0x006 RJMP WDT        ; Прерывание сторожевого таймера
+0x007 RJMP TIM2_COMPA ; Прерывание таймера 2 по совпадению A
+0x008 RJMP TIM2_COMPB ; Прерывание таймера 2 по совпадению B
+0x009 RJMP TIM2_OVF   ; Прерывание таймера 2 по переполнению
+0x00A RJMP TIM1_CAPT  ; Прерывание таймера 1 по захвату
+0x00B RJMP TIM1_COMPA ; Прерывание таймера 1 по совпадению A
+0x00C RJMP TIM1_COMPB ; Прерывание таймера 1 по совпадению B
+0x00D RJMP TIM1_OVF   ; Прерывание таймера 1 по переполнению
+0x00E RJMP TIM0_COMPA ; Прерывание таймера 0 по совпадению A
+0x00F RJMP TIM0_COMPB ; Прерывание таймера 0 по совпадению B
+0x010 RJMP TIM0_OVF   ; Прерывание таймера 0 по переполнению
+0x011 RJMP SPI_STC    ; Прерывание по завершению передачи SPI
+0x012 RJMP USART_RXC  ; Прерывание по завершению приёма USART
+0x013 RJMP USART_UDRE ; Прерывание по пустому регистру данных USART
+0x014 RJMP USART_TXC  ; Прерывание по завершению передачи USART
+0x015 RJMP ADC        ; Прерывание по завершению преобразования АЦП
+0x016 RJMP EE_RDY     ; Прерывание по готовности контроллера EEPROM
+0x017 RJMP ANA_COMP   ; Прерывание компаратора
+0x018 RJMP TWI        ; Прерывание контроллера TWI
+0x019 NOP             ; Зарезервированный адрес
+0x01A NOP             ; Зарезервированный адрес
+0x01B RJMP PCI3       ; Прерывание по изменению уровня на выводе 3
+
+RESET:
+0x01C ldi r16, high(RAMEND) ; Main program start
+0x01D out SPH, r16          ; Set Stack Pointer to top of RAM
+0x01E ldi r16, low(RAMEND)
+0x01F out SPL, r16
+0x020 sei                   ; Enable interrupts
+0x021 ...
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h2>Описание регистров<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<section id="mcucr">
+<h3>MCUCR - Регистр управления<a class="headerlink" href="#mcucr" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>MCUCR: 0x35 (0x55)</p></th>
+<th class="head"><p>Значение по умолчанию: 0x00</p></th>
+</tr>
+</thead>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>MCUCR</p></th>
+<th class="head"><p>FWKEN</p></th>
+<th class="head"><p>FPDEN</p></th>
+<th class="head"><p>EXRFD</p></th>
+<th class="head"><p>PUD</p></th>
+<th class="head"><p>IRLD</p></th>
+<th class="head"><p>IFAIL</p></th>
+<th class="head"><p>IVSEL</p></th>
+<th class="head"><p>WCE</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+<td><p>W/O</p></td>
+<td><p>R/O</p></td>
+<td><p>R/W</p></td>
+<td><p>R/W</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id5">
+<h4>Описание битов<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Бит</p></th>
+<th class="head"><p>Обозначение</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>[0]</p></td>
+<td><p>WCE</p></td>
+<td><p>Бит разрешения обновления MCUCR.<br>Перед обновлением MCUCR необходимо установить этот бит,<br>затем выполнить обновление регистра MCUCR в течение 6 циклов.</p></td>
+</tr>
+<tr class="row-odd"><td><p>[1]</p></td>
+<td><p>IVSEL</p></td>
+<td><p>Бит выбора вектора прерывания.<br>Когда этот бит установлен в 1, адреса векторов прерываний<br>будут переназначены на новый адрес в соответствии<br>со значением регистра IVBASE.</p></td>
+</tr>
+<tr class="row-even"><td><p>[2]</p></td>
+<td><p>IFAIL</p></td>
+<td><p>Флаг сбоя загрузки конфигурации системы.<br>0 = проверка конфигурационной информации пройдена <br>1 = сбой загрузки конфигурационной информации</p></td>
+</tr>
+<tr class="row-odd"><td><p>[3]</p></td>
+<td><p>IRLD</p></td>
+<td><p>Запись 1 инициирует перезагрузку конфигурации системы.</p></td>
+</tr>
+<tr class="row-even"><td><p>[4]</p></td>
+<td><p>PUD</p></td>
+<td><p>Глобальный бит запрета подтяжки (pull-up).<br>0 = глобальное управление подтяжкой включено <br>1 = подтягивающие резисторы на всех входах/выходах отключены</p></td>
+</tr>
+<tr class="row-odd"><td><p>[5]</p></td>
+<td><p>EXRFD</p></td>
+<td><p>Бит запрета фильтрации внешнего сброса.<br>0 = цифровой фильтр внешнего сброса (190 мкс) включён <br>1 = цифровой фильтр внешнего сброса отключён</p></td>
+</tr>
+<tr class="row-even"><td><p>[6]</p></td>
+<td><p>FPDEN</p></td>
+<td><p>Управление питанием Flash (Power-down).<br>0 = после перехода системы в SLEEP питание Flash сохраняется <br>1 = после перехода системы в SLEEP питание Flash отключается</p></td>
+</tr>
+<tr class="row-odd"><td><p>[7]</p></td>
+<td><p>FWKEN</p></td>
+<td><p>Управление режимом быстрого пробуждения.<br>Действителен только для режима Power/Off.<br>0 = задержка фильтрации 260 мкс <br>1 = задержка фильтрации 32 мкс</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="ivbase">
+<h3>IVBASE - Регистр базового адреса векторов прерываний<a class="headerlink" href="#ivbase" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>IVBASE: 0x75</p></th>
+<th class="head"><p>Значение по умолчанию: 0x00</p></th>
+</tr>
+</thead>
+</table>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>IVBASE</p></th>
+<th class="head"><p>IVBASE[7:0]</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>R/W</p></td>
+<td><p>R/W</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id6">
+<h4>Описание битов<a class="headerlink" href="#id6" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Биты</p></th>
+<th class="head"><p>Обозначение</p></th>
+<th class="head"><p>Описание</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>[7:0]</p></td>
+<td><p>IVBASE</p></td>
+<td><p>Если бит IVSEL установлен в 1, векторы прерываний (за исключением<br>вектора сброса) будут переназначены на новый базовый адрес<br>IVBASE страницей размером 512 байт.<br>Базовый адрес векторов прерываний после переназначения<br>вычисляется как:<br><strong>(IVBASE &lt;&lt; 8) + соответствующий адрес вектора<br>из таблицы векторов прерываний</strong></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="udsc.html" class="btn btn-neutral float-left" title="Ускоритель вычислений" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="external-interrupts.html" class="btn btn-neutral float-right" title="Внешние прерывания" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright b-oleg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
