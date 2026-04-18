@@ -8,31 +8,29 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "d:/Oleg/My/Develop/LGT/LGT8FXP/examples/basic-pio",
-                "d:/Oleg/My/Develop/LGT/LGT8FXP/test",
+                "d:/Oleg/My/Develop/LGT/LGT8FXP/examples/stdio-pio",
                 "d:/Oleg/My/Develop/LGT/LGT8FXP/src",
-                "d:/Oleg/My/Develop/LGT/LGT8FXP/.pio/libdeps/test/Unity/src",
                 "d:/Oleg/My/Develop/LGT/LGT8FXP/.git",
                 "d:/Oleg/My/Develop/LGT/LGT8FXP/.github",
                 "d:/Oleg/My/Develop/LGT/LGT8FXP/.pio",
                 "d:/Oleg/My/Develop/LGT/LGT8FXP/.vscode",
                 "d:/Oleg/My/Develop/LGT/LGT8FXP/doc",
                 "d:/Oleg/My/Develop/LGT/LGT8FXP/examples",
+                "d:/Oleg/My/Develop/LGT/LGT8FXP/test",
                 ""
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "d:/Oleg/My/Develop/LGT/LGT8FXP/examples/basic-pio",
-                    "d:/Oleg/My/Develop/LGT/LGT8FXP/test",
+                    "d:/Oleg/My/Develop/LGT/LGT8FXP/examples/stdio-pio",
                     "d:/Oleg/My/Develop/LGT/LGT8FXP/src",
-                    "d:/Oleg/My/Develop/LGT/LGT8FXP/.pio/libdeps/test/Unity/src",
                     "d:/Oleg/My/Develop/LGT/LGT8FXP/.git",
                     "d:/Oleg/My/Develop/LGT/LGT8FXP/.github",
                     "d:/Oleg/My/Develop/LGT/LGT8FXP/.pio",
                     "d:/Oleg/My/Develop/LGT/LGT8FXP/.vscode",
                     "d:/Oleg/My/Develop/LGT/LGT8FXP/doc",
                     "d:/Oleg/My/Develop/LGT/LGT8FXP/examples",
+                    "d:/Oleg/My/Develop/LGT/LGT8FXP/test",
                     ""
                 ]
             },
@@ -42,8 +40,6 @@
                 "ARDUINO_ARCH_AVR",
                 "ARDUINO_AVR_LARDU_328P",
                 "AVR_LARDU_328E",
-                "UNITY_INCLUDE_CONFIG_H",
-                "UNITY_INCLUDE_CONFIG_H",
                 ""
             ],
             "cStandard": "gnu11",

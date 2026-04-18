@@ -4,9 +4,9 @@
 #include <util/delay.h>
 
 int main() {
-    clk_set_oscm();
+    clk_set_oscm();			// external crystal
 	
-    PDB.B5 = 1; // PB5 - output
+    PDB.B5 = 1; 			// PB5 - output
 
     while (1) {
         POB.B5 = 1;

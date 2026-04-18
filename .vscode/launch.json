@@ -12,8 +12,8 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
-            "executable": "d:/Oleg/My/Develop/LGT/LGT8FXP/.pio/build/test/firmware.elf",
-            "projectEnvName": "test",
+            "executable": "d:/Oleg/My/Develop/LGT/LGT8FXP/.pio/build/examples/firmware.elf",
+            "projectEnvName": "examples",
             "toolchainBinDir": "C:/Users/Oleg/.platformio/packages/toolchain-atmelavr/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "preLaunchTask": {
@@ -25,8 +25,8 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
-            "executable": "d:/Oleg/My/Develop/LGT/LGT8FXP/.pio/build/test/firmware.elf",
-            "projectEnvName": "test",
+            "executable": "d:/Oleg/My/Develop/LGT/LGT8FXP/.pio/build/examples/firmware.elf",
+            "projectEnvName": "examples",
             "toolchainBinDir": "C:/Users/Oleg/.platformio/packages/toolchain-atmelavr/bin",
             "internalConsoleOptions": "openOnSessionStart"
         },
@@ -34,8 +34,8 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (without uploading)",
-            "executable": "d:/Oleg/My/Develop/LGT/LGT8FXP/.pio/build/test/firmware.elf",
-            "projectEnvName": "test",
+            "executable": "d:/Oleg/My/Develop/LGT/LGT8FXP/.pio/build/examples/firmware.elf",
+            "projectEnvName": "examples",
             "toolchainBinDir": "C:/Users/Oleg/.platformio/packages/toolchain-atmelavr/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "loadMode": "manual"
